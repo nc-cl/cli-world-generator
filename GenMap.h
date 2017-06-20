@@ -3,62 +3,19 @@
 
 class GenMap {
     private:
-        int sizeX, sizeY;
-        int* map;
-        void populate(void);
+        int _sizeX, _sizeY;
+        int* _map;
     public:
-        GenMap(void);
-        GenMap(int, int);
+        GenMap(void) : _sizeX(5), _sizeY(5) { populate(); }
+        GenMap(int x, int y) : _sizeX(x), _sizeY(y) { populate(); }
         int getWidth(void);
         int getHeight(void);
         int getSize(void);
         void setSizeX(int);
         void setSizeY(int);
+        void populate(void);
         void printMapValues(void);
 };
 
-void GenMap::populate() {
-    int size = getSize();
-    map = new int[size];
-    
-    int val = 0;
-
-    for (int i = 0; i < size; i++) {
-        map[i] = val;
-        val++;
-    }
-}
-
-GenMap::GenMap() {
-    sizeX = 5;
-    sizeY = 5;
-    populate();
-}
-
-GenMap::GenMap(int sizeX, int sizeY) {
-    this->sizeX = sizeX;
-    this->sizeY = sizeY;
-    populate();
-}
-
-int GenMap::getWidth() {
-    return sizeX;
-}
-
-int GenMap::getHeight() {
-    return sizeY;
-}
-
-int GenMap::getSize() {
-    return sizeX * sizeY;
-}
-
-void GenMap::setSizeX(int sizeX) {
-    this->sizeX = sizeX;
-}
-
-void GenMap::setSizeY(int sizeY) {
-    this->sizeY = sizeY;
-}
-
 #endif
+
