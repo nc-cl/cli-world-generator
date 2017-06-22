@@ -3,7 +3,6 @@
 #include <sstream>
 #include "GenMap.h"
 
-using namespace std;
 
 int GenMap::getWidth() {
     return _sizeX;
@@ -13,7 +12,7 @@ int GenMap::getHeight() {
     return _sizeY;
 }
 
-int GenMap::getSize() {
+int GenMap::getArea() {
     return _sizeX * _sizeY;
 }
 
@@ -26,26 +25,31 @@ void GenMap::setSizeY(int sizeY) {
 }
 
 void GenMap::populate() {
-    int size = getSize();
-    _map = new int[size];
+    _map.resize(_sizeY);
     
-    int val = 0;
-
-    for (int i = 0; i < size; i++) {
-        _map[i] = val;
-        val++;
+    int val = 1;
+    
+    for (int i = 0; i < _sizeY; i++) {
+        for (int j = 0; j < _sizeX; j++) {
+            _map[i].resize(_sizeX);
+            _map[i][j] = val;
+            val++;
+        }
     }
 }
 
 void GenMap::printMapValues() {
-    std::stringstream strstr;
+    stringstream strstr;
 
-    strstr << "map:";
-    
-    for (int i = 0; i < getSize(); i++) {
-        strstr << " " << _map[i];
+    for (int i = 0; i < _sizeY; i++) {
+        for (int j = 0; j < _sizeX; j++) {
+            strstr << _map[i][j];
+            strstr << ((_map[i][j] < 10) ? "   " : ((_map[i][j] < 100) ? "  " : " "));
+        }
+
+        strstr << endl;
     }
 
-    cout << strstr.str() << endl;
+    cout << strstr.str();
 }
 
