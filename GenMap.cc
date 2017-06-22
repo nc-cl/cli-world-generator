@@ -27,13 +27,11 @@ void GenMap::setSizeY(int sizeY) {
 void GenMap::populate() {
     _map.resize(_sizeY);
     
-    int val = 1;
-    
     for (int i = 0; i < _sizeY; i++) {
+        _map[i].resize(_sizeX);
+        
         for (int j = 0; j < _sizeX; j++) {
-            _map[i].resize(_sizeX);
-            _map[i][j] = val;
-            val++;
+            _map[i][j].setBiome(BIOME_SEA);
         }
     }
 }
@@ -43,13 +41,16 @@ void GenMap::printMapValues() {
 
     for (int i = 0; i < _sizeY; i++) {
         for (int j = 0; j < _sizeX; j++) {
-            strstr << _map[i][j];
-            strstr << ((_map[i][j] < 10) ? "   " : ((_map[i][j] < 100) ? "  " : " "));
+            strstr << _map[i][j].getBiomeChar();
         }
 
         strstr << endl;
     }
 
     cout << strstr.str();
+}
+
+GenMapNode GenMap::getAtPoint(int x, int y) {
+    return _map[y][x];
 }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "GenMap.cc"
+#include "GenMapNode.cc"
 
 using namespace std;
 
