@@ -76,11 +76,7 @@ void GenMap::printMap(bool useColor) {
 
     for (int i = 0; i < _sizeY; i++) {
         for (int j = 0; j < _sizeX; j++) {
-            if (useColor) {
-                strstr << _map[i][j].getColorBiomeChar();
-            } else {
-                strstr << _map[i][j].getBiomeChar();
-            }
+            strstr << _map[i][j].getBiomeString(useColor);
         }
 
         strstr << endl;

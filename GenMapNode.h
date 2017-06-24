@@ -14,8 +14,7 @@ class GenMapNode {
         GenMapNode(void) { setBiome(BIOME_NULL); }
         GenMapNode(int biome) { setBiome(biome); }
         int getBiome(void);
-        char getBiomeChar(void);
-        string getColorBiomeChar(void);
+        string getBiomeString(bool);
         void setBiome(int);
 };
 
