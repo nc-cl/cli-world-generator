@@ -7,7 +7,7 @@ using namespace std;
 
 int main() {
     GenMap gmap;
-    gmap.printMapValues();
+    gmap.printMap();
 
     return 0;
 }

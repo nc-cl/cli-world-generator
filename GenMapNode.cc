@@ -1,7 +1,6 @@
 #include <iostream>
 #include "GenMapNode.h"
 
-
 int GenMapNode::getBiome() {
     return _biome;
 }
@@ -13,13 +12,18 @@ char GenMapNode::getBiomeChar() {
 void GenMapNode::setBiome(int biome) {
     _biome = biome;
     
-    switch(biome) {
+    switch (biome) {
         case BIOME_SEA:
             _biomeChar = '~';
             break;
         case BIOME_GRASSLAND:
             _biomeChar = 'G';
             break;
+        default:
+            _biomeChar = '?';
     }
 }
 
+bool GenMapNode::isLand() {
+    return _biome == BIOME_GRASSLAND;
+}
