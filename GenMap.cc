@@ -3,8 +3,6 @@
 #include <math.h>
 #include <algorithm>
 #include <array>
-#include <iostream>
-#include <string>
 #include <sstream>
 #include "GenMap.h"
 
@@ -73,12 +71,16 @@ void GenMap::populate() {
     }
 }
 
-void GenMap::printMap() {
+void GenMap::printMap(bool useColor) {
     stringstream strstr;
 
     for (int i = 0; i < _sizeY; i++) {
         for (int j = 0; j < _sizeX; j++) {
-            strstr << _map[i][j].getBiomeChar();
+            if (useColor) {
+                strstr << _map[i][j].getColorBiomeChar();
+            } else {
+                strstr << _map[i][j].getBiomeChar();
+            }
         }
 
         strstr << endl;

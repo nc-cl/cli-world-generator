@@ -25,7 +25,7 @@ class GenMap {
         void setSizeX(int);
         void setSizeY(int);
         void populate(void);
-        void printMap(void);
+        void printMap(bool);
 };
 
 #endif
