@@ -17,7 +17,7 @@ class GenMap {
         vector<vector<GenMapNode> > _map;
         int _getAdjacentBiome(int, int, int);
     public:
-        GenMap(void) : _sizeX(60), _sizeY(20) { populate(); }
+        GenMap(void) : _sizeX(120), _sizeY(40) { populate(); }
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { populate(); }
         int getWidth(void);
         int getHeight(void);

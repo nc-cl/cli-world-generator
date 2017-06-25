@@ -5,6 +5,7 @@
 
 using namespace std;
 
+// Compiled using: g++ -std=c++11 -Wall -o test test.cc
 int main(int argc, char* argv[]) {
     bool useColor = true;
 
@@ -13,6 +14,8 @@ int main(int argc, char* argv[]) {
             useColor = false;
         }
     }
+
+    srand(time(NULL));
 
     GenMap gmap;
     gmap.printMap(useColor);

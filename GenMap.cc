@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <time.h>
+#include <sys/time.h>
 #include <math.h>
 #include <algorithm>
 #include <array>
@@ -33,18 +33,20 @@ void GenMap::populate() {
         _map[i].resize(_sizeX);
     }
 
-    srand(time(NULL));
-
     int randomX, randomY;
 
     for (int i = 0; i < ceil(getArea() / 50); i++) {
-        randomX = rand() % _sizeX;
-        randomY = rand() % _sizeY;
+        randomX = max(min(rand() % _sizeX, _sizeX - 2), 1);
+        randomY = max(min(rand() % _sizeY, _sizeY - 2), 1);
         _map[randomY][randomX].setBiome(BIOME_GRASSLAND);
     }
 
     for (int i = 0; i < _sizeY; i++) {
         for (int j = 0; j < _sizeX; j++) {
+            if (_map[i][j].getBiome() == BIOME_GRASSLAND) {
+                continue;
+            }
+
             array<int, 4> dirs = {
                 DIRECTION_N,
                 DIRECTION_E,
@@ -54,19 +56,31 @@ void GenMap::populate() {
 
             int adj;
             int adjLandCount = 0;
+            bool hasAdjOutOfBounds = false;
 
             for (unsigned int k = 0; k < dirs.size(); k++) {
-                adj = _getAdjacentBiome(i, j, dirs[k]);
+                adj = _getAdjacentBiome(j, i, dirs[k]);
 
                 if (adj == BIOME_GRASSLAND) {
                     adjLandCount++;
+                } else if (adj == BIOME_NULL && !hasAdjOutOfBounds) {
+                    hasAdjOutOfBounds = true;
                 }
             }
+            
+            float landChance;
 
-            float landChance = max(min(adjLandCount*0.50, 0.95), 0.1);
+            if (hasAdjOutOfBounds) {
+                landChance = 0.0;
+            } else {
+                landChance = max(min(adjLandCount * 0.5, 0.9), 0.01);
+            }
+
             bool isLand = landChance*100 >= (rand() % 100) + 1;
 
-            _map[i][j].setBiome(isLand ? BIOME_GRASSLAND : BIOME_SEA);
+            if (isLand) {
+                _map[i][j].setBiome(BIOME_GRASSLAND);
+            }
         }
     }
 }

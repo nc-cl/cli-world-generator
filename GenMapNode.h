@@ -11,7 +11,7 @@ class GenMapNode {
     private:
         int _biome;
     public:
-        GenMapNode(void) { setBiome(BIOME_NULL); }
+        GenMapNode(void) { setBiome(BIOME_SEA); }
         GenMapNode(int biome) { setBiome(biome); }
         int getBiome(void);
         string getBiomeString(bool);
