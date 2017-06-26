@@ -1,4 +1,5 @@
 #include <vector>
+#include <array>
 #include "GenMapNode.h"
 
 #ifndef GEN_MAP_H_
@@ -11,11 +12,19 @@ const int DIRECTION_E = 1;
 const int DIRECTION_S = 2;
 const int DIRECTION_W = 3;
 
+const array<int, 4> DIRECTIONS = {
+    DIRECTION_N,
+    DIRECTION_E,
+    DIRECTION_S,
+    DIRECTION_W
+};
+
 class GenMap {
     private:
         int _sizeX, _sizeY;
         vector<vector<GenMapNode> > _map;
-        int _getAdjacentBiome(int, int, int);
+        int _getBiomeAtDistance(int, int, int, int);
+        int _getDistanceFromOutOfBounds(int, int);
     public:
         GenMap(void) : _sizeX(120), _sizeY(40) { populate(); }
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { populate(); }

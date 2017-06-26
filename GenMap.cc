@@ -1,8 +1,6 @@
 #include <stdlib.h>
-#include <sys/time.h>
 #include <math.h>
 #include <algorithm>
-#include <array>
 #include <sstream>
 #include "GenMap.h"
 
@@ -47,23 +45,16 @@ void GenMap::populate() {
                 continue;
             }
 
-            array<int, 4> dirs = {
-                DIRECTION_N,
-                DIRECTION_E,
-                DIRECTION_S,
-                DIRECTION_W
-            };
-
-            int adj;
+            int adjBiome;
             int adjLandCount = 0;
             bool hasAdjOutOfBounds = false;
 
-            for (unsigned int k = 0; k < dirs.size(); k++) {
-                adj = _getAdjacentBiome(j, i, dirs[k]);
+            for (unsigned int k = 0; k < DIRECTIONS.size(); k++) {
+                adjBiome = _getBiomeAtDistance(j, i, DIRECTIONS[k], 1);
 
-                if (adj == BIOME_GRASSLAND) {
+                if (adjBiome == BIOME_GRASSLAND) {
                     adjLandCount++;
-                } else if (adj == BIOME_NULL && !hasAdjOutOfBounds) {
+                } else if (!hasAdjOutOfBounds && adjBiome == BIOME_NULL) {
                     hasAdjOutOfBounds = true;
                 }
             }
@@ -73,7 +64,7 @@ void GenMap::populate() {
             if (hasAdjOutOfBounds) {
                 landChance = 0.0;
             } else {
-                landChance = max(min(adjLandCount * 0.5, 0.9), 0.01);
+                landChance = max(min(adjLandCount * 0.475, 0.99), 0.01);
             }
 
             bool isLand = landChance*100 >= (rand() % 100) + 1;
@@ -99,22 +90,22 @@ void GenMap::printMap(bool useColor) {
     cout << strstr.str();
 }
 
-int GenMap::_getAdjacentBiome(int x, int y, int dir) {
+int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
     int adjX = x;
     int adjY = y;
 
     switch (dir) {
         case DIRECTION_N:
-            adjY--;
+            adjY -= dist;
             break;
         case DIRECTION_E:
-            adjX++;
+            adjX += dist;
             break;
         case DIRECTION_S:
-            adjY++;
+            adjY += dist;
             break;
         case DIRECTION_W:
-            adjX--;
+            adjX -= dist;
     }
 
     int biome;
@@ -126,4 +117,24 @@ int GenMap::_getAdjacentBiome(int x, int y, int dir) {
     }
 
     return biome;
+}
+
+int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
+    int minDistance = max(_sizeX, _sizeY);
+    
+    for (unsigned int i = 0; i < DIRECTIONS.size(); i++) {
+        bool oob = false;
+        int distance = 1;
+
+        while (!oob) {
+            if (_getBiomeAtDistance(x, y, DIRECTIONS[i], distance) == BIOME_NULL) {
+                minDistance = min(distance, minDistance);
+                oob = true;
+            } else {
+                distance++;
+            }
+        }
+    }
+
+    return minDistance;
 }
