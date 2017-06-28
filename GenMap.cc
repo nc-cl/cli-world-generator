@@ -56,7 +56,7 @@ void GenMap::populate() {
                 }
             }
 
-            int distanceFromOob = _getDistanceFromOutOfBounds(j, i);
+            int distanceFromOob = _getDistanceFromBiome(j, i, BIOME_NULL);
             float landChance = 0.0;
 
             if (distanceFromOob > 1) {
@@ -64,7 +64,7 @@ void GenMap::populate() {
                     landChance -= 0.6 / distanceFromOob;
                 }
 
-                landChance += max(min(adjLandCount * 0.475, 0.99), 0.01);
+                landChance = max(landChance + min(adjLandCount*0.475, 0.99), 0.01);
             }
 
             bool isLand = landChance*100 >= (rand() % 100) + 1;
@@ -119,19 +119,23 @@ int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
     return biome;
 }
 
-int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
+int GenMap::_getDistanceFromBiome(int x, int y, int biome) {
     int minDistance = max(_sizeX, _sizeY);
     
     for (unsigned int i = 0; i < DIRECTIONS.size(); i++) {
-        bool oob = false;
+        bool lookForBiome = true;
         int distance = 1;
 
-        while (!oob) {
-            if (_getBiomeAtDistance(x, y, DIRECTIONS[i], distance) == BIOME_NULL) {
-                minDistance = min(distance, minDistance);
-                oob = true;
+        while (lookForBiome) {
+            if (distance < minDistance) {
+                if(_getBiomeAtDistance(x, y, DIRECTIONS[i], distance) == biome) {
+                    minDistance = distance;
+                    lookForBiome = false;
+                } else {
+                    distance++;
+                }
             } else {
-                distance++;
+                lookForBiome = false;
             }
         }
     }
