@@ -61,7 +61,7 @@ void GenMap::populate() {
 
             if (distanceFromOob > 1) {
                 if (distanceFromOob < 4) {
-                    landChance -= distanceFromOob*0.1;
+                    landChance -= 0.6 / distanceFromOob;
                 }
 
                 landChance += max(min(adjLandCount * 0.475, 0.99), 0.01);
