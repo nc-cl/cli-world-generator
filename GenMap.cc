@@ -47,24 +47,24 @@ void GenMap::populate() {
 
             int adjBiome;
             int adjLandCount = 0;
-            bool hasAdjOutOfBounds = false;
 
             for (unsigned int k = 0; k < DIRECTIONS.size(); k++) {
                 adjBiome = _getBiomeAtDistance(j, i, DIRECTIONS[k], 1);
 
                 if (adjBiome == BIOME_GRASSLAND) {
                     adjLandCount++;
-                } else if (!hasAdjOutOfBounds && adjBiome == BIOME_NULL) {
-                    hasAdjOutOfBounds = true;
                 }
             }
-            
-            float landChance;
 
-            if (hasAdjOutOfBounds) {
-                landChance = 0.0;
-            } else {
-                landChance = max(min(adjLandCount * 0.475, 0.99), 0.01);
+            int distanceFromOob = _getDistanceFromOutOfBounds(j, i);
+            float landChance = 0.0;
+
+            if (distanceFromOob > 1) {
+                if (distanceFromOob < 4) {
+                    landChance -= distanceFromOob*0.1;
+                }
+
+                landChance += max(min(adjLandCount * 0.475, 0.99), 0.01);
             }
 
             bool isLand = landChance*100 >= (rand() % 100) + 1;
