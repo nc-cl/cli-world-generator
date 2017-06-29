@@ -7,6 +7,9 @@
 
 using namespace std;
 
+const int DEFAULT_SIZE_X = 120;
+const int DEFAULT_SIZE_Y = 40;
+
 const int DIRECTION_N = 0;
 const int DIRECTION_E = 1;
 const int DIRECTION_S = 2;
@@ -26,7 +29,7 @@ class GenMap {
         int _getBiomeAtDistance(int, int, int, int);
         int _getDistanceFromBiome(int, int, int);
     public:
-        GenMap(void) : _sizeX(120), _sizeY(40) { populate(); }
+        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { populate(); }
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { populate(); }
         int getWidth(void);
         int getHeight(void);
