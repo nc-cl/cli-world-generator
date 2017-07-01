@@ -39,7 +39,11 @@ void GenMap::populate() {
         _map[randomY][randomX].setBiome(BIOME_GRASSLAND);
     }
 
+    int distanceFromOobY, distanceFromOobX, distanceFromOob;
+
     for (int i = 0; i < _sizeY; i++) {
+        distanceFromOobY = min(i + 1, abs(i - _sizeY));
+
         for (int j = 0; j < _sizeX; j++) {
             if (_map[i][j].getBiome() == BIOME_GRASSLAND) {
                 continue;
@@ -56,7 +60,9 @@ void GenMap::populate() {
                 }
             }
 
-            int distanceFromOob = _getDistanceFromBiome(j, i, BIOME_NULL);
+            distanceFromOobX = min(j + 1, abs(j - _sizeX));
+            distanceFromOob = min(distanceFromOobX, distanceFromOobY);
+
             float landChance = 0.0;
 
             if (distanceFromOob > 1) {
@@ -117,28 +123,4 @@ int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
     }
 
     return biome;
-}
-
-int GenMap::_getDistanceFromBiome(int x, int y, int biome) {
-    int minDistance = max(_sizeX, _sizeY);
-    
-    for (unsigned int i = 0; i < DIRECTIONS.size(); i++) {
-        bool lookForBiome = true;
-        int distance = 1;
-
-        while (lookForBiome) {
-            if (distance < minDistance) {
-                if(_getBiomeAtDistance(x, y, DIRECTIONS[i], distance) == biome) {
-                    minDistance = distance;
-                    lookForBiome = false;
-                } else {
-                    distance++;
-                }
-            } else {
-                lookForBiome = false;
-            }
-        }
-    }
-
-    return minDistance;
 }
