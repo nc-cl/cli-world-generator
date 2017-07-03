@@ -27,7 +27,8 @@ class GenMap {
         int _sizeX, _sizeY;
         vector<vector<GenMapNode> > _map;
         void _initMap(void);
-        int _getBiomeAtDistance(int, int, int, int);
+        GenMapNode _getAdjacent(int, int, int);
+        int _getDistanceFromOutOfBounds(int, int);
     public:
         GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { _initMap(); }
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { _initMap(); }

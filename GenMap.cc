@@ -12,33 +12,39 @@ void GenMap::_initMap() {
     }
 }
 
-int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
+GenMapNode GenMap::_getAdjacent(int x, int y, int dir) {
     int adjX = x;
     int adjY = y;
 
     switch (dir) {
         case DIRECTION_N:
-            adjY -= dist;
+            adjY--;
             break;
         case DIRECTION_E:
-            adjX += dist;
+            adjX++;
             break;
         case DIRECTION_S:
-            adjY += dist;
+            adjY++;
             break;
         case DIRECTION_W:
-            adjX -= dist;
+            adjX--;
     }
 
-    int biome;
+    GenMapNode node;
 
     try {
-        biome = _map.at(adjY).at(adjX).getBiome();
+        node = _map.at(adjY).at(adjX);
     } catch (const out_of_range& e) {
-        biome = BIOME_NULL;
+        node = GenMapNode(BIOME_NULL);
     }
 
-    return biome;
+    return node;
+}
+
+int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
+    int distanceX = min(x + 1, abs(x - _sizeX));
+    int distanceY = min(y + 1, abs(y - _sizeY));
+    return min(distanceX, distanceY);
 }
 
 int GenMap::getWidth() {
@@ -62,11 +68,7 @@ void GenMap::generateLand() {
         _map[randomY][randomX].setBiome(BIOME_GRASSLAND);
     }
 
-    int distanceFromOobY, distanceFromOobX, distanceFromOob;
-
     for (int i = 0; i < _sizeY; i++) {
-        distanceFromOobY = min(i + 1, abs(i - _sizeY));
-
         for (int j = 0; j < _sizeX; j++) {
             if (_map[i][j].getBiome() == BIOME_GRASSLAND) {
                 continue;
@@ -76,15 +78,14 @@ void GenMap::generateLand() {
             int adjLandCount = 0;
 
             for (unsigned int k = 0; k < DIRECTIONS.size(); k++) {
-                adjBiome = _getBiomeAtDistance(j, i, DIRECTIONS[k], 1);
+                adjBiome = _getAdjacent(j, i, DIRECTIONS[k]).getBiome();
 
                 if (adjBiome == BIOME_GRASSLAND) {
                     adjLandCount++;
                 }
             }
 
-            distanceFromOobX = min(j + 1, abs(j - _sizeX));
-            distanceFromOob = min(distanceFromOobX, distanceFromOobY);
+            int distanceFromOob = _getDistanceFromOutOfBounds(j, i);
 
             float landChance = 0.0;
 
