@@ -35,6 +35,7 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
+    gmap.generateLand();
     gmap.printMap(useColor);
 
     return 0;

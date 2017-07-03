@@ -4,6 +4,43 @@
 #include <sstream>
 #include "GenMap.h"
 
+void GenMap::_initMap() {
+    _map.resize(_sizeY);
+
+    for (int i = 0; i < _sizeY; i++) {
+        _map[i].resize(_sizeX);
+    }
+}
+
+int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
+    int adjX = x;
+    int adjY = y;
+
+    switch (dir) {
+        case DIRECTION_N:
+            adjY -= dist;
+            break;
+        case DIRECTION_E:
+            adjX += dist;
+            break;
+        case DIRECTION_S:
+            adjY += dist;
+            break;
+        case DIRECTION_W:
+            adjX -= dist;
+    }
+
+    int biome;
+
+    try {
+        biome = _map.at(adjY).at(adjX).getBiome();
+    } catch (const out_of_range& e) {
+        biome = BIOME_NULL;
+    }
+
+    return biome;
+}
+
 int GenMap::getWidth() {
     return _sizeX;
 }
@@ -16,21 +53,7 @@ int GenMap::getArea() {
     return _sizeX * _sizeY;
 }
 
-void GenMap::setSizeX(int sizeX) {
-    _sizeX = sizeX;
-}
-
-void GenMap::setSizeY(int sizeY) {
-    _sizeY = sizeY;
-}
-
-void GenMap::populate() {
-    _map.resize(_sizeY);
-
-    for (int i = 0; i < _sizeY; i++) {
-        _map[i].resize(_sizeX);
-    }
-
+void GenMap::generateLand() {
     int randomX, randomY;
 
     for (int i = 0; i < ceil(getArea() / 50); i++) {
@@ -94,33 +117,4 @@ void GenMap::printMap(bool useColor) {
     }
 
     cout << strstr.str();
-}
-
-int GenMap::_getBiomeAtDistance(int x, int y, int dir, int dist) {
-    int adjX = x;
-    int adjY = y;
-
-    switch (dir) {
-        case DIRECTION_N:
-            adjY -= dist;
-            break;
-        case DIRECTION_E:
-            adjX += dist;
-            break;
-        case DIRECTION_S:
-            adjY += dist;
-            break;
-        case DIRECTION_W:
-            adjX -= dist;
-    }
-
-    int biome;
-
-    try {
-        biome = _map.at(adjY).at(adjX).getBiome();
-    } catch (const out_of_range& e) {
-        biome = BIOME_NULL;
-    }
-
-    return biome;
 }

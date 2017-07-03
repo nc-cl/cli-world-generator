@@ -26,16 +26,15 @@ class GenMap {
     private:
         int _sizeX, _sizeY;
         vector<vector<GenMapNode> > _map;
+        void _initMap(void);
         int _getBiomeAtDistance(int, int, int, int);
     public:
-        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { populate(); }
-        GenMap(int x, int y) : _sizeX(x), _sizeY(y) { populate(); }
+        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { _initMap(); }
+        GenMap(int x, int y) : _sizeX(x), _sizeY(y) { _initMap(); }
         int getWidth(void);
         int getHeight(void);
         int getArea(void);
-        void setSizeX(int);
-        void setSizeY(int);
-        void populate(void);
+        void generateLand(void);
         void printMap(bool);
 };
 
