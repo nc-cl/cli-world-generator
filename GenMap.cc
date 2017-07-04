@@ -18,13 +18,13 @@ GenMapNode GenMap::_getAdjacent(int x, int y, int dir) {
 
     switch (dir) {
         case DIRECTION_N:
-            adjY--;
+            adjY++;
             break;
         case DIRECTION_E:
             adjX++;
             break;
         case DIRECTION_S:
-            adjY++;
+            adjY--;
             break;
         case DIRECTION_W:
             adjX--;
@@ -109,7 +109,7 @@ void GenMap::generateLand() {
 void GenMap::printMap(bool useColor) {
     stringstream strstr;
 
-    for (int i = 0; i < _sizeY; i++) {
+    for (int i = _sizeY - 1; i > -1; i--) {
         for (int j = 0; j < _sizeX; j++) {
             strstr << _map[i][j].getBiomeString(useColor);
         }
