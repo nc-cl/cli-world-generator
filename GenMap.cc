@@ -60,14 +60,6 @@ int GenMap::getArea() {
 }
 
 void GenMap::generateLand() {
-    int randomX, randomY;
-
-    for (int i = 0; i < ceil(getArea() / 50); i++) {
-        randomX = max(min(rand() % _sizeX, _sizeX - 2), 1);
-        randomY = max(min(rand() % _sizeY, _sizeY - 2), 1);
-        _map[randomY][randomX].setBiome(BIOME_GRASSLAND);
-    }
-
     for (int i = 0; i < _sizeY; i++) {
         for (int j = 0; j < _sizeX; j++) {
             if (_map[i][j].getBiome() == BIOME_GRASSLAND) {

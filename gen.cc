@@ -8,6 +8,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
     int height = DEFAULT_SIZE_Y;
+    int seaLevel = 2;
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
@@ -27,6 +28,12 @@ int main(int argc, char* argv[]) {
                     } catch (const invalid_argument& e) {}
                 }
             }
+        } else if (strcmp(argv[i], "-sl") == 0) {
+            i++;
+
+            try {
+                seaLevel = max(min(stoi(argv[i]), 3), 1);
+            } catch (const invalid_argument& e) {}
         } else if (strcmp(argv[i], "-nc") == 0) {
             useColor = false;
         }
@@ -35,7 +42,11 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generateLand();
+
+    for (int i = 0; i < seaLevel; i++) {
+        gmap.generateLand();
+    }
+
     gmap.printMap(useColor);
 
     return 0;
