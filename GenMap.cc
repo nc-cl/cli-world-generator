@@ -17,17 +17,28 @@ GenMapNode GenMap::_getAdjacent(int x, int y, int dir) {
     int adjY = y;
 
     switch (dir) {
-        case DIRECTION_N:
-            adjY++;
-            break;
+        case DIRECTION_NE:
         case DIRECTION_E:
+        case DIRECTION_SE:
             adjX++;
             break;
+        case DIRECTION_SW:
+        case DIRECTION_W:
+        case DIRECTION_NW:
+            adjX--;
+    }
+
+    switch (dir) {
+        case DIRECTION_NW:
+        case DIRECTION_N:
+        case DIRECTION_NE:
+            adjY++;
+            break;
+        case DIRECTION_SE:
         case DIRECTION_S:
+        case DIRECTION_SW:
             adjY--;
             break;
-        case DIRECTION_W:
-            adjX--;
     }
 
     GenMapNode node;

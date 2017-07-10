@@ -11,9 +11,13 @@ const int DEFAULT_SIZE_X = 120;
 const int DEFAULT_SIZE_Y = 40;
 
 const int DIRECTION_N = 0;
-const int DIRECTION_E = 1;
-const int DIRECTION_S = 2;
-const int DIRECTION_W = 3;
+const int DIRECTION_NE = 1;
+const int DIRECTION_E = 2;
+const int DIRECTION_SE = 3;
+const int DIRECTION_S = 4;
+const int DIRECTION_SW = 5;
+const int DIRECTION_W = 6;
+const int DIRECTION_NW = 7;
 
 const array<int, 4> DIRECTIONS = {
     DIRECTION_N,
