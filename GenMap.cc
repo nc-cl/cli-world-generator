@@ -106,12 +106,14 @@ void GenMap::generateLand() {
     }
 }
 
-void GenMap::printMap(bool useColor) {
+void GenMap::printMap(bool useColor, bool matchMapData) {
     stringstream strstr;
+    int yIndexStart = matchMapData ? -(_sizeY - 1) : 0;
+    int yIndexEnd = matchMapData ? 1 : _sizeY;
 
-    for (int i = _sizeY - 1; i > -1; i--) {
+    for (int i = yIndexStart; i < yIndexEnd; i++) {
         for (int j = 0; j < _sizeX; j++) {
-            strstr << _map[i][j].getBiomeString(useColor);
+            strstr << _map[abs(i)][j].getBiomeString(useColor);
         }
 
         strstr << endl;

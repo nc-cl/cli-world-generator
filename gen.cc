@@ -8,10 +8,11 @@ using namespace std;
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
     int height = DEFAULT_SIZE_Y;
+    bool matchMapData = true;
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-s") == 0) {
+        if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
             if (i + 1 < argc) {
                 i++;
 
@@ -27,7 +28,9 @@ int main(int argc, char* argv[]) {
                     } catch (const invalid_argument& e) {}
                 }
             }
-        } else if (strcmp(argv[i], "-nc") == 0) {
+        } else if (strcmp(argv[i], "--match-map-data") == 0 || strcmp(argv[i], "-m") == 0) {
+            matchMapData = false;
+        } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
             useColor = false;
         }
     }
@@ -36,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     GenMap gmap(width, height);
     gmap.generateLand();
-    gmap.printMap(useColor);
+    gmap.printMap(useColor, matchMapData);
 
     return 0;
 }
