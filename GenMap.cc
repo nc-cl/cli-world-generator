@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include "GenMap.h"
+#include "NoiseSmoother.h"
 
 void GenMap::_initMap() {
     _map.resize(_sizeY);
@@ -59,50 +60,15 @@ int GenMap::getArea() {
     return _sizeX * _sizeY;
 }
 
-void GenMap::generateLand() {
-    int randomX, randomY;
+void GenMap::generate() {
+    float** map = NoiseSmoother::getPerlinNoise(3);
 
-    for (int i = 0; i < ceil(getArea() / 50); i++) {
-        randomX = max(min(rand() % _sizeX, _sizeX - 2), 1);
-        randomY = max(min(rand() % _sizeY, _sizeY - 2), 1);
-        _map[randomY][randomX].setBiome(BIOME_GRASSLAND);
-    }
-
-    for (int i = 0; i < _sizeY; i++) {
-        for (int j = 0; j < _sizeX; j++) {
-            if (_map[i][j].getBiome() == BIOME_GRASSLAND) {
-                continue;
-            }
-
-            int adjBiome;
-            int adjLandCount = 0;
-
-            for (unsigned int k = 0; k < DIRECTIONS.size(); k++) {
-                adjBiome = _getAdjacent(j, i, DIRECTIONS[k]).getBiome();
-
-                if (adjBiome == BIOME_GRASSLAND) {
-                    adjLandCount++;
-                }
-            }
-
-            int distanceFromOob = _getDistanceFromOutOfBounds(j, i);
-
-            float landChance = 0.0;
-
-            if (distanceFromOob > 1) {
-                if (distanceFromOob < 4) {
-                    landChance -= 0.6 / distanceFromOob;
-                }
-
-                landChance = max(landChance + min(adjLandCount*0.475, 0.99), 0.01);
-            }
-
-            bool isLand = landChance*100 >= (rand() % 100) + 1;
-
-            if (isLand) {
-                _map[i][j].setBiome(BIOME_GRASSLAND);
-            }
+    for (int i = 0; i < 40; i++) {
+        for (int j = 0; j < 120; j++) {
+            char ch = (floor(0.5+map[i][j]) == 0 ? '~' : '@');
+            cout << ch;
         }
+        cout << endl;
     }
 }
 

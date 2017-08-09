@@ -38,8 +38,9 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generateLand();
-    gmap.printMap(useColor, matchMapData);
+    gmap.generate();
+    //gmap.printMap(useColor, matchMapData);
+    cout << endl << "done" << endl;
 
     return 0;
 }

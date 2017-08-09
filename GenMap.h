@@ -35,7 +35,7 @@ class GenMap {
         int getWidth(void);
         int getHeight(void);
         int getArea(void);
-        void generateLand(void);
+        void generate(void);
         void printMap(bool, bool);
 };
 
