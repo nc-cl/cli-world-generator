@@ -3,17 +3,32 @@
 
 using namespace std;
 
-const int X = 120;
-const int Y = 40;
-
 class NoiseSmoother {
     private:
-        static float _lerp(float val1, float val2, float alpha) {
-            return (1 - alpha) * val1 + alpha * val2;
+        static float** _getEmpty2dArray(int width, int height) {
+            float** arr = new float*[height];
+
+            for (int i = 0; i < height; i++) {
+                arr[i] = new float[width];
+            }
+
+            return arr;
         }
         
+        static float** _getWhiteNoise(int width, int height) {
+            float** whiteNoise = _getEmpty2dArray(width, height);
+
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
+                }
+            }
+
+            return whiteNoise;
+        }
+
         static float** _getOctave(float** noise, int octaveNumber, int width, int height) {
-            float** octave = _getEmpty2dArray();
+            float** octave = _getEmpty2dArray(width, height);
             int wlen = 1 << octaveNumber;
             float freq = 1.0f / wlen;
 
@@ -36,31 +51,13 @@ class NoiseSmoother {
             return octave;
         }
 
-        static float** _getWhiteNoise() {
-            float** whiteNoise = _getEmpty2dArray();
-            
-            for (int i = 0; i < Y; i++) {
-                for (int j = 0; j < X; j++) {
-                    whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
-                }
-            }
-
-            return whiteNoise;
-        }
-
-        static float** _getEmpty2dArray() {
-            float** arr = new float*[Y];
-
-            for (int i = 0; i < Y; i++) {
-                arr[i] = new float[X];
-            }
-
-            return arr;
+        static float _lerp(float val1, float val2, float alpha) {
+            return (1 - alpha) * val1 + alpha * val2;
         }
     public:
-        static float** getPerlinNoise(int numOctaves) {
-            float** whiteNoise = _getWhiteNoise();
-            float** perlinNoise = _getEmpty2dArray();
+        static float** getPerlinNoise(int numOctaves, int width, int height) {
+            float** whiteNoise = _getWhiteNoise(width, height);
+            float** perlinNoise = _getEmpty2dArray(width, height);
             float*** octaves = new float**[numOctaves];
 
             float amp = 1.0f;
@@ -68,13 +65,13 @@ class NoiseSmoother {
             float persistence = 0.5f;
 
             for (int o = numOctaves-1; o >= 0; o--) {
-                octaves[o] = _getOctave(whiteNoise, o, X, Y);
+                octaves[o] = _getOctave(whiteNoise, o, width, height);
 
                 amp *= persistence;
                 totalAmp += amp;
 
-                for (int i = 0; i < Y; i++) {
-                    for (int j = 0; j < X; j++) {
+                for (int i = 0; i < height; i++) {
+                    for (int j = 0; j < width; j++) {
                         perlinNoise[i][j] += octaves[o][i][j] * amp;
 
                         if (o == 0) {

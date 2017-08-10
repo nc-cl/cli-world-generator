@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     GenMap gmap(width, height);
     gmap.generate();
-    //gmap.printMap(useColor, matchMapData);
+    gmap.printMap(useColor, matchMapData);
     cout << endl << "done" << endl;
 
     return 0;

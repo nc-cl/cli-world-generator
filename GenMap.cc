@@ -36,7 +36,7 @@ GenMapNode GenMap::_getAdjacent(int x, int y, int dir) {
     try {
         node = _map.at(adjY).at(adjX);
     } catch (const out_of_range& e) {
-        node = GenMapNode(BIOME_NULL);
+        node = GenMapNode(BIOME_SEA);
     }
 
     return node;
@@ -48,6 +48,14 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
     return min(distanceX, distanceY);
 }
 
+void GenMap::_setMapFromPerlinNoise(float** noise) {
+    for (int i = 0; i < _sizeY; i++) {
+        for (int j = 0; j < _sizeX; j++) {
+            _map[i][j].setBiome(floor(noise[i][j] + 0.5));
+        }
+    }
+}
+
 int GenMap::getWidth() {
     return _sizeX;
 }
@@ -56,20 +64,8 @@ int GenMap::getHeight() {
     return _sizeY;
 }
 
-int GenMap::getArea() {
-    return _sizeX * _sizeY;
-}
-
 void GenMap::generate() {
-    float** map = NoiseSmoother::getPerlinNoise(3);
-
-    for (int i = 0; i < 40; i++) {
-        for (int j = 0; j < 120; j++) {
-            char ch = (floor(0.5+map[i][j]) == 0 ? '~' : '@');
-            cout << ch;
-        }
-        cout << endl;
-    }
+    _setMapFromPerlinNoise(NoiseSmoother::getPerlinNoise(4, _sizeX, _sizeY));
 }
 
 void GenMap::printMap(bool useColor, bool matchMapData) {

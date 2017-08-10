@@ -3,9 +3,8 @@
 
 using namespace std;
 
-const int BIOME_NULL = 0;
-const int BIOME_SEA = 1;
-const int BIOME_GRASSLAND = 2;
+const int BIOME_SEA = 0;
+const int BIOME_GRASSLAND = 1;
 
 class GenMapNode {
     private:

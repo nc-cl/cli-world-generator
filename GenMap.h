@@ -29,12 +29,12 @@ class GenMap {
         void _initMap(void);
         GenMapNode _getAdjacent(int, int, int);
         int _getDistanceFromOutOfBounds(int, int);
+        void _setMapFromPerlinNoise(float**);
     public:
         GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { _initMap(); }
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { _initMap(); }
         int getWidth(void);
         int getHeight(void);
-        int getArea(void);
         void generate(void);
         void printMap(bool, bool);
 };
