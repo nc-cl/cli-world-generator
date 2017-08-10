@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include "GenMap.h"
-#include "NoiseSmoother.h"
+#include "NoiseUtil.h"
 
 void GenMap::_initMap() {
     _map.resize(_sizeY);
@@ -65,7 +65,8 @@ int GenMap::getHeight() {
 }
 
 void GenMap::generate() {
-    _setMapFromPerlinNoise(NoiseSmoother::getPerlinNoise(4, _sizeX, _sizeY));
+    NoiseUtil noiseUtil(_sizeX, _sizeY);
+    _setMapFromPerlinNoise(noiseUtil.getPerlinNoise(4));
 }
 
 void GenMap::printMap(bool useColor, bool matchMapData) {

@@ -1,25 +1,27 @@
-#ifndef NOISE_SMOOTHER_H_
-#define NOISE_SMOOTHER_H_
+#ifndef NOISE_UTIL_H_
+#define NOISE_UTIL_H_
 
 using namespace std;
 
-class NoiseSmoother {
+class NoiseUtil {
     private:
-        static float** _getEmpty2dArray(int width, int height) {
-            float** arr = new float*[height];
+        int _sizeX, _sizeY;
 
-            for (int i = 0; i < height; i++) {
-                arr[i] = new float[width];
+        float** _getEmpty2dArray() {
+            float** arr = new float*[_sizeY];
+
+            for (int i = 0; i < _sizeY; i++) {
+                arr[i] = new float[_sizeX];
             }
 
             return arr;
         }
         
-        static float** _getWhiteNoise(int width, int height) {
-            float** whiteNoise = _getEmpty2dArray(width, height);
+        float** _getWhiteNoise() {
+            float** whiteNoise = _getEmpty2dArray();
 
-            for (int i = 0; i < height; i++) {
-                for (int j = 0; j < width; j++) {
+            for (int i = 0; i < _sizeY; i++) {
+                for (int j = 0; j < _sizeX; j++) {
                     whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
                 }
             }
@@ -27,19 +29,19 @@ class NoiseSmoother {
             return whiteNoise;
         }
 
-        static float** _getOctave(float** noise, int octaveNumber, int width, int height) {
-            float** octave = _getEmpty2dArray(width, height);
+        float** _getOctave(float** noise, int octaveNumber) {
+            float** octave = _getEmpty2dArray();
             int wlen = 1 << octaveNumber;
             float freq = 1.0f / wlen;
 
-            for (int i = 0; i < height; i++) {
+            for (int i = 0; i < _sizeY; i++) {
                 int i0 = i / wlen * wlen;
-                int i1 = (i0 + wlen) % height;
+                int i1 = (i0 + wlen) % _sizeY;
                 float vblend = (i - i0) * freq;
 
-                for (int j = 0; j < width; j++) {
+                for (int j = 0; j < _sizeX; j++) {
                     int j0 = j / wlen * wlen;
-                    int j1 = (j0 + wlen) % width;
+                    int j1 = (j0 + wlen) % _sizeX;
                     float hblend = (j- j0) * freq;
 
                     float left = _lerp(noise[i0][j0], noise[i1][j0], vblend);
@@ -51,13 +53,20 @@ class NoiseSmoother {
             return octave;
         }
 
-        static float _lerp(float val1, float val2, float alpha) {
-            return (1 - alpha) * val1 + alpha * val2;
+        float _lerp(float val1, float val2, float alpha) {
+            return (1 - alpha)*val1 + alpha*val2;
         }
     public:
-        static float** getPerlinNoise(int numOctaves, int width, int height) {
-            float** whiteNoise = _getWhiteNoise(width, height);
-            float** perlinNoise = _getEmpty2dArray(width, height);
+        NoiseUtil(int x, int y) : _sizeX(x), _sizeY(y) {}
+
+        void setSize(int sizeX, int sizeY) {
+            _sizeX = sizeX;
+            _sizeY = sizeY;
+        }
+
+        float** getPerlinNoise(int numOctaves) {
+            float** whiteNoise = _getWhiteNoise();
+            float** perlinNoise = _getEmpty2dArray();
             float*** octaves = new float**[numOctaves];
 
             float amp = 1.0f;
@@ -65,13 +74,13 @@ class NoiseSmoother {
             float persistence = 0.5f;
 
             for (int o = numOctaves-1; o >= 0; o--) {
-                octaves[o] = _getOctave(whiteNoise, o, width, height);
+                octaves[o] = _getOctave(whiteNoise, o);
 
                 amp *= persistence;
                 totalAmp += amp;
 
-                for (int i = 0; i < height; i++) {
-                    for (int j = 0; j < width; j++) {
+                for (int i = 0; i < _sizeY; i++) {
+                    for (int j = 0; j < _sizeX; j++) {
                         perlinNoise[i][j] += octaves[o][i][j] * amp;
 
                         if (o == 0) {
