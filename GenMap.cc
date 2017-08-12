@@ -13,35 +13,6 @@ void GenMap::_initMap() {
     }
 }
 
-GenMapNode GenMap::_getAdjacent(int x, int y, int dir) {
-    int adjX = x;
-    int adjY = y;
-
-    switch (dir) {
-        case DIRECTION_N:
-            adjY++;
-            break;
-        case DIRECTION_E:
-            adjX++;
-            break;
-        case DIRECTION_S:
-            adjY--;
-            break;
-        case DIRECTION_W:
-            adjX--;
-    }
-
-    GenMapNode node;
-
-    try {
-        node = _map.at(adjY).at(adjX);
-    } catch (const out_of_range& e) {
-        node = GenMapNode(BIOME_SEA);
-    }
-
-    return node;
-}
-
 int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
     int distanceX = min(x + 1, abs(x - _sizeX));
     int distanceY = min(y + 1, abs(y - _sizeY));
