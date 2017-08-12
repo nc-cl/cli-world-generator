@@ -8,25 +8,41 @@ using namespace std;
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
     int height = DEFAULT_SIZE_Y;
+
+    float lacunarity = DEFAULT_LACUNARITY;
+    float persistence = DEFAULT_PERSISTENCE;
+
     bool matchMapData = true;
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
             if (i + 1 < argc) {
-                i++;
-
                 try {
-                    width = stoi(argv[i]);
+                    width = stoi(argv[i+1]);
+                    i++;
                 } catch (const invalid_argument& e) {}
 
                 if (i + 1 < argc) {
-                    i++;
-
                     try {
-                        height = stoi(argv[i]);
+                        height = stoi(argv[i+1]);
+                        i++;
                     } catch (const invalid_argument& e) {}
                 }
+            }
+        } else if (strcmp(argv[i], "--persistence") == 0 || strcmp(argv[i], "-p") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    persistence = stof(argv[i+1]);
+                    i++;
+                } catch (const invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--lacunarity") == 0 || strcmp(argv[i], "-l") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    lacunarity = stof(argv[i+1]);
+                    i++;
+                } catch (const invalid_argument& e) {}
             }
         } else if (strcmp(argv[i], "--match-map-data") == 0 || strcmp(argv[i], "-m") == 0) {
             matchMapData = false;
@@ -38,9 +54,8 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generate();
+    gmap.generate(lacunarity, persistence);
     gmap.printMap(useColor, matchMapData);
-    cout << endl << "done" << endl;
 
     return 0;
 }

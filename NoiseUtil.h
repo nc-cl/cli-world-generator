@@ -3,6 +3,9 @@
 
 using namespace std;
 
+const float DEFAULT_LACUNARITY = 2.0f;
+const float DEFAULT_PERSISTENCE = 0.5f;
+
 class NoiseUtil {
     private:
         int _sizeX, _sizeY;
@@ -29,9 +32,9 @@ class NoiseUtil {
             return whiteNoise;
         }
 
-        float** _getOctave(float** noise, int octaveNumber) {
+        float** _getOctave(float** noise, int octaveNumber, int lacunarity) {
             float** octave = _getEmpty2dArray();
-            int wlen = 1 << octaveNumber;
+            int wlen = pow(lacunarity, octaveNumber);
             float freq = 1.0f / wlen;
 
             for (int i = 0; i < _sizeY; i++) {
@@ -42,7 +45,7 @@ class NoiseUtil {
                 for (int j = 0; j < _sizeX; j++) {
                     int j0 = j / wlen * wlen;
                     int j1 = (j0 + wlen) % _sizeX;
-                    float hblend = (j- j0) * freq;
+                    float hblend = (j - j0) * freq;
 
                     float left = _lerp(noise[i0][j0], noise[i1][j0], vblend);
                     float right = _lerp(noise[i0][j1], noise[i1][j1], vblend);
@@ -64,17 +67,16 @@ class NoiseUtil {
             _sizeY = sizeY;
         }
 
-        float** getPerlinNoise(int numOctaves) {
+        float** getPerlinNoise(int numOctaves, int lac, float persistence) {
             float** whiteNoise = _getWhiteNoise();
             float** perlinNoise = _getEmpty2dArray();
             float*** octaves = new float**[numOctaves];
 
             float amp = 1.0f;
             float totalAmp = 0.0f;
-            float persistence = 0.5f;
 
             for (int o = numOctaves-1; o >= 0; o--) {
-                octaves[o] = _getOctave(whiteNoise, o);
+                octaves[o] = _getOctave(whiteNoise, o, lac);
 
                 amp *= persistence;
                 totalAmp += amp;

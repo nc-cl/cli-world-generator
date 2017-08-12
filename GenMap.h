@@ -35,7 +35,7 @@ class GenMap {
         GenMap(int x, int y) : _sizeX(x), _sizeY(y) { _initMap(); }
         int getWidth(void);
         int getHeight(void);
-        void generate(void);
+        void generate(float, float);
         void printMap(bool, bool);
 };
 
