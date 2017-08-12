@@ -32,7 +32,7 @@ class NoiseUtil {
             return whiteNoise;
         }
 
-        float** _getOctave(float** noise, int octaveNumber, int lacunarity) {
+        float** _getOctave(float** noise, int octaveNumber, float lacunarity) {
             float** octave = _getEmpty2dArray();
             int wlen = pow(lacunarity, octaveNumber);
             float freq = 1.0f / wlen;
@@ -67,7 +67,7 @@ class NoiseUtil {
             _sizeY = sizeY;
         }
 
-        float** getPerlinNoise(int numOctaves, int lac, float persistence) {
+        float** getPerlinNoise(int numOctaves, float lacunarity, float persistence) {
             float** whiteNoise = _getWhiteNoise();
             float** perlinNoise = _getEmpty2dArray();
             float*** octaves = new float**[numOctaves];
@@ -76,7 +76,7 @@ class NoiseUtil {
             float totalAmp = 0.0f;
 
             for (int o = numOctaves-1; o >= 0; o--) {
-                octaves[o] = _getOctave(whiteNoise, o, lac);
+                octaves[o] = _getOctave(whiteNoise, o, lacunarity);
 
                 amp *= persistence;
                 totalAmp += amp;
