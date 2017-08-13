@@ -11,10 +11,10 @@ class NoiseUtil {
         int _sizeX, _sizeY;
 
         float** _getEmpty2dArray() {
-            float** arr = new float*[_sizeY];
+            float** arr = new float*[_sizeX];
 
-            for (int i = 0; i < _sizeY; i++) {
-                arr[i] = new float[_sizeX];
+            for (int i = 0; i < _sizeX; i++) {
+                arr[i] = new float[_sizeY];
             }
 
             return arr;
@@ -23,8 +23,8 @@ class NoiseUtil {
         float** _getWhiteNoise() {
             float** whiteNoise = _getEmpty2dArray();
 
-            for (int i = 0; i < _sizeY; i++) {
-                for (int j = 0; j < _sizeX; j++) {
+            for (int i = 0; i < _sizeX; i++) {
+                for (int j = 0; j < _sizeY; j++) {
                     whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
                 }
             }
@@ -37,19 +37,19 @@ class NoiseUtil {
             int wlen = pow(lacunarity, octaveNumber);
             float freq = 1.0f / wlen;
 
-            for (int i = 0; i < _sizeY; i++) {
+            for (int i = 0; i < _sizeX; i++) {
                 int i0 = i / wlen * wlen;
-                int i1 = (i0 + wlen) % _sizeY;
-                float vblend = (i - i0) * freq;
+                int i1 = (i0 + wlen) % _sizeX;
+                float hblend = (i - i0) * freq;
 
-                for (int j = 0; j < _sizeX; j++) {
+                for (int j = 0; j < _sizeY; j++) {
                     int j0 = j / wlen * wlen;
-                    int j1 = (j0 + wlen) % _sizeX;
-                    float hblend = (j - j0) * freq;
+                    int j1 = (j0 + wlen) % _sizeY;
+                    float vblend = (j - j0) * freq;
 
-                    float left = _lerp(noise[i0][j0], noise[i1][j0], vblend);
-                    float right = _lerp(noise[i0][j1], noise[i1][j1], vblend);
-                    octave[i][j] = _lerp(left, right, hblend);
+                    float left = _lerp(noise[i0][j0], noise[i1][j0], hblend);
+                    float right = _lerp(noise[i0][j1], noise[i1][j1], hblend);
+                    octave[i][j] = _lerp(left, right, vblend);
                 }
             }
 
@@ -81,8 +81,8 @@ class NoiseUtil {
                 amp *= persistence;
                 totalAmp += amp;
 
-                for (int i = 0; i < _sizeY; i++) {
-                    for (int j = 0; j < _sizeX; j++) {
+                for (int i = 0; i < _sizeX; i++) {
+                    for (int j = 0; j < _sizeY; j++) {
                         perlinNoise[i][j] += octaves[o][i][j] * amp;
 
                         if (o == 0) {

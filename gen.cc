@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
     float lacunarity = DEFAULT_LACUNARITY;
     float persistence = DEFAULT_PERSISTENCE;
 
-    bool matchMapData = true;
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
@@ -44,8 +43,6 @@ int main(int argc, char* argv[]) {
                     i++;
                 } catch (const invalid_argument& e) {}
             }
-        } else if (strcmp(argv[i], "--match-map-data") == 0 || strcmp(argv[i], "-m") == 0) {
-            matchMapData = false;
         } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
             useColor = false;
         }
@@ -55,7 +52,7 @@ int main(int argc, char* argv[]) {
 
     GenMap gmap(width, height);
     gmap.generate(lacunarity, persistence);
-    gmap.printMap(useColor, matchMapData);
+    gmap.printMap(useColor);
 
     return 0;
 }

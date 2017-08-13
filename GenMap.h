@@ -23,7 +23,7 @@ class GenMap {
         int getWidth(void);
         int getHeight(void);
         void generate(float, float);
-        void printMap(bool, bool);
+        void printMap(bool);
 };
 
 #endif
