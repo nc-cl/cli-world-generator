@@ -47,9 +47,9 @@ class NoiseUtil {
                     int j1 = (j0 + wlen) % _sizeY;
                     float vblend = (j - j0) * freq;
 
-                    float left = _lerp(noise[i0][j0], noise[i1][j0], hblend);
-                    float right = _lerp(noise[i0][j1], noise[i1][j1], hblend);
-                    octave[i][j] = _lerp(left, right, vblend);
+                    float bottom = _lerp(noise[i0][j0], noise[i1][j0], hblend);
+                    float top = _lerp(noise[i0][j1], noise[i1][j1], hblend);
+                    octave[i][j] = _lerp(bottom, top, vblend);
                 }
             }
 

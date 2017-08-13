@@ -20,14 +20,12 @@ int main(int argc, char* argv[]) {
                 try {
                     width = stoi(argv[i+1]);
                     i++;
-                } catch (const invalid_argument& e) {}
 
-                if (i + 1 < argc) {
-                    try {
+                    if (i + 1 < argc) {
                         height = stoi(argv[i+1]);
                         i++;
-                    } catch (const invalid_argument& e) {}
-                }
+                    }
+                } catch (const invalid_argument& e) {}
             }
         } else if (strcmp(argv[i], "--persistence") == 0 || strcmp(argv[i], "-p") == 0) {
             if (i + 1 < argc) {
