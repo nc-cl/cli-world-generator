@@ -36,8 +36,7 @@ int GenMap::getHeight() {
 }
 
 void GenMap::generate(float lacunarity, float persistence) {
-    NoiseUtil noiseUtil(_sizeX, _sizeY);
-    _setMapFromPerlinNoise(noiseUtil.getPerlinNoise(4, lacunarity, persistence));
+    _setMapFromPerlinNoise(NoiseUtil::getPerlinNoise(4, lacunarity, persistence, _sizeX, _sizeY));
 }
 
 void GenMap::printMap(bool useColor) {

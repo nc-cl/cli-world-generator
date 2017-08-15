@@ -8,23 +8,49 @@ const float DEFAULT_PERSISTENCE = 0.5f;
 
 class NoiseUtil {
     private:
-        int _sizeX, _sizeY;
+        static float** _getEmpty2dArray(int width, int height) {
+            float** arr = new float*[width];
 
-        float** _getEmpty2dArray() {
-            float** arr = new float*[_sizeX];
-
-            for (int i = 0; i < _sizeX; i++) {
-                arr[i] = new float[_sizeY];
+            for (int i = 0; i < width; i++) {
+                arr[i] = new float[height];
             }
 
             return arr;
         }
-        
-        float** _getWhiteNoise() {
-            float** whiteNoise = _getEmpty2dArray();
 
-            for (int i = 0; i < _sizeX; i++) {
-                for (int j = 0; j < _sizeY; j++) {
+        static float** _getOctave(float** noise, int octaveNumber, float lacunarity, int width, int height) {
+            float** octave = NoiseUtil::_getEmpty2dArray(width, height);
+            int wlen = pow(lacunarity, octaveNumber);
+            float freq = 1.0f / wlen;
+
+            for (int i = 0; i < width; i++) {
+                int i0 = i / wlen * wlen;
+                int i1 = (i0 + wlen) % width;
+                float hblend = (i - i0) * freq;
+
+                for (int j = 0; j < height; j++) {
+                    int j0 = j / wlen * wlen;
+                    int j1 = (j0 + wlen) % height;
+                    float vblend = (j - j0) * freq;
+
+                    float bottom = NoiseUtil::_lerp(noise[i0][j0], noise[i1][j0], hblend);
+                    float top = NoiseUtil::_lerp(noise[i0][j1], noise[i1][j1], hblend);
+                    octave[i][j] = NoiseUtil::_lerp(bottom, top, vblend);
+                }
+            }
+
+            return octave;
+        }
+
+        static float _lerp(float val1, float val2, float alpha) {
+            return (1 - alpha)*val1 + alpha*val2;
+        }
+    public:
+        static float** _getWhiteNoise(int width, int height) {
+            float** whiteNoise = NoiseUtil::_getEmpty2dArray(width, height);
+
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
                     whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
                 }
             }
@@ -32,57 +58,26 @@ class NoiseUtil {
             return whiteNoise;
         }
 
-        float** _getOctave(float** noise, int octaveNumber, float lacunarity) {
-            float** octave = _getEmpty2dArray();
-            int wlen = pow(lacunarity, octaveNumber);
-            float freq = 1.0f / wlen;
-
-            for (int i = 0; i < _sizeX; i++) {
-                int i0 = i / wlen * wlen;
-                int i1 = (i0 + wlen) % _sizeX;
-                float hblend = (i - i0) * freq;
-
-                for (int j = 0; j < _sizeY; j++) {
-                    int j0 = j / wlen * wlen;
-                    int j1 = (j0 + wlen) % _sizeY;
-                    float vblend = (j - j0) * freq;
-
-                    float bottom = _lerp(noise[i0][j0], noise[i1][j0], hblend);
-                    float top = _lerp(noise[i0][j1], noise[i1][j1], hblend);
-                    octave[i][j] = _lerp(bottom, top, vblend);
-                }
-            }
-
-            return octave;
+        static float** getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height) {
+            float** whiteNoise = NoiseUtil::_getWhiteNoise(width, height);
+            return NoiseUtil::getPerlinNoise(numOctaves, lacunarity, persistence, width, height, whiteNoise);
         }
 
-        float _lerp(float val1, float val2, float alpha) {
-            return (1 - alpha)*val1 + alpha*val2;
-        }
-    public:
-        NoiseUtil(int x, int y) : _sizeX(x), _sizeY(y) {}
-
-        void setSize(int sizeX, int sizeY) {
-            _sizeX = sizeX;
-            _sizeY = sizeY;
-        }
-
-        float** getPerlinNoise(int numOctaves, float lacunarity, float persistence) {
-            float** whiteNoise = _getWhiteNoise();
-            float** perlinNoise = _getEmpty2dArray();
+        static float** getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height, float** noise) {
+            float** perlinNoise = NoiseUtil::_getEmpty2dArray(width, height);
             float*** octaves = new float**[numOctaves];
 
             float amp = 1.0f;
             float totalAmp = 0.0f;
 
             for (int o = numOctaves-1; o >= 0; o--) {
-                octaves[o] = _getOctave(whiteNoise, o, lacunarity);
+                octaves[o] = NoiseUtil::_getOctave(noise, o, lacunarity, width, height);
 
                 amp *= persistence;
                 totalAmp += amp;
 
-                for (int i = 0; i < _sizeX; i++) {
-                    for (int j = 0; j < _sizeY; j++) {
+                for (int i = 0; i < width; i++) {
+                    for (int j = 0; j < height; j++) {
                         perlinNoise[i][j] += octaves[o][i][j] * amp;
 
                         if (o == 0) {
