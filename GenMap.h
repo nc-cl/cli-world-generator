@@ -18,11 +18,19 @@ class GenMap {
         int _getDistanceFromOutOfBounds(int, int);
         void _setMapFromPerlinNoise(float**);
     public:
-        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) { _initMap(); }
-        GenMap(int x, int y) : _sizeX(x), _sizeY(y) { _initMap(); }
+        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) {
+            _initMap();
+        }
+
+        GenMap(int x, int y) {
+            _sizeX = max(x, 0);
+            _sizeY = max(y, 0);
+            _initMap();
+        }
+
         int getWidth(void);
         int getHeight(void);
-        void generate(float, float);
+        void generate(int, float, float);
         void printMap(bool);
 };
 

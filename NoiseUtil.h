@@ -3,6 +3,7 @@
 
 using namespace std;
 
+const int DEFAULT_OCTAVES = 4;
 const float DEFAULT_LACUNARITY = 2.0f;
 const float DEFAULT_PERSISTENCE = 0.5f;
 
@@ -64,6 +65,11 @@ class NoiseUtil {
         }
 
         static float** getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height, float** noise) {
+            numOctaves = max(numOctaves, 0);
+            lacunarity = max(lacunarity, 1.0f);
+            persistence = max(persistence, 0.01f);
+
+
             float** perlinNoise = NoiseUtil::_getEmpty2dArray(width, height);
             float*** octaves = new float**[numOctaves];
 

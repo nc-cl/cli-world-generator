@@ -9,6 +9,7 @@ int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
     int height = DEFAULT_SIZE_Y;
 
+    int octaves = DEFAULT_OCTAVES;
     float lacunarity = DEFAULT_LACUNARITY;
     float persistence = DEFAULT_PERSISTENCE;
 
@@ -25,6 +26,13 @@ int main(int argc, char* argv[]) {
                         height = stoi(argv[i+1]);
                         i++;
                     }
+                } catch (const invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--octaves") == 0 || strcmp(argv[i], "-o") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    octaves = stoi(argv[i+1]);
+                    i++;
                 } catch (const invalid_argument& e) {}
             }
         } else if (strcmp(argv[i], "--persistence") == 0 || strcmp(argv[i], "-p") == 0) {
@@ -49,7 +57,7 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generate(lacunarity, persistence);
+    gmap.generate(octaves, lacunarity, persistence);
     gmap.printMap(useColor);
 
     return 0;
