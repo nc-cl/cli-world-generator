@@ -46,7 +46,7 @@ class NoiseUtil {
             return (1 - alpha)*val1 + alpha*val2;
         }
     public:
-        static float** _getWhiteNoise(int width, int height) {
+        static float** getWhiteNoise(int width, int height) {
             float** whiteNoise = NoiseUtil::_getEmpty2dArray(width, height);
 
             for (int i = 0; i < width; i++) {
@@ -59,7 +59,7 @@ class NoiseUtil {
         }
 
         static float** getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height) {
-            float** whiteNoise = NoiseUtil::_getWhiteNoise(width, height);
+            float** whiteNoise = NoiseUtil::getWhiteNoise(width, height);
             return NoiseUtil::getPerlinNoise(numOctaves, lacunarity, persistence, width, height, whiteNoise);
         }
 
