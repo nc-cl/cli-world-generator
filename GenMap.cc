@@ -22,7 +22,7 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
 void GenMap::_setMapFromNoise(float** noise) {
     for (int i = 0; i < _sizeX; i++) {
         for (int j = 0; j < _sizeY; j++) {
-            _map[i][j].setBiome(noise[i][j]);
+            _map[i][j].setComputedBiome(noise[i][j]);
         }
     }
 }
@@ -47,7 +47,7 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
                 noise[i][j] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
             }
 
-            noise[i][j] = max(floor(noise[i][j] + 0.5f), 0.0f);
+            noise[i][j] = max(noise[i][j], 0.0f);
         }
     }
 

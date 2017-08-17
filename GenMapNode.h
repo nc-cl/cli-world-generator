@@ -4,7 +4,10 @@
 using namespace std;
 
 const int BIOME_SEA = 0;
-const int BIOME_GRASSLAND = 1;
+const int BIOME_COAST = 1;
+const int BIOME_GRASSLAND = 2;
+const int BIOME_MOUNTAIN = 3;
+const int BIOME_SNOW = 4;
 
 class GenMapNode {
     private:
@@ -15,6 +18,7 @@ class GenMapNode {
         int getBiome(void);
         string getBiomeString(bool);
         void setBiome(int);
+        void setComputedBiome(float);
 };
 
 #endif
