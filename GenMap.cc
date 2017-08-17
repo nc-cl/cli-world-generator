@@ -19,10 +19,10 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
     return min(distanceX, distanceY);
 }
 
-void GenMap::_setMapFromPerlinNoise(float** noise) {
+void GenMap::_setMapFromNoise(float** noise) {
     for (int i = 0; i < _sizeX; i++) {
         for (int j = 0; j < _sizeY; j++) {
-            _map[i][j].setBiome(floor(noise[i][j] + 0.5));
+            _map[i][j].setBiome(noise[i][j]);
         }
     }
 }
@@ -36,17 +36,22 @@ int GenMap::getHeight() {
 }
 
 void GenMap::generate(int octaves, float lacunarity, float persistence) {
-    float** noise = NoiseUtil::getWhiteNoise(_sizeX, _sizeY);
+    float** noise = NoiseUtil::getPerlinNoise(octaves, lacunarity, persistence, _sizeX, _sizeY, NoiseUtil::getWhiteNoise(_sizeX, _sizeY));
+    int maxDistanceFromBorder = max(min(_sizeX, _sizeY) / 5, 1);
 
     for (int i = 0; i < _sizeX; i++) {
         for (int j = 0; j < _sizeY; j++) {
-            if (_getDistanceFromOutOfBounds(i, j) <= max(min(_sizeX, _sizeY) / 20, 1)) {
-                noise[i][j] = 0;
+            int distanceFromBorder = _getDistanceFromOutOfBounds(i, j);
+
+            if (distanceFromBorder <= maxDistanceFromBorder) {
+                noise[i][j] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
             }
+
+            noise[i][j] = max(floor(noise[i][j] + 0.5f), 0.0f);
         }
     }
 
-    _setMapFromPerlinNoise(NoiseUtil::getPerlinNoise(octaves, lacunarity, persistence, _sizeX, _sizeY, noise));
+    _setMapFromNoise(noise);
 }
 
 void GenMap::printMap(bool useColor) {

@@ -69,7 +69,6 @@ class NoiseUtil {
             lacunarity = max(lacunarity, 1.0f);
             persistence = max(persistence, 0.01f);
 
-
             float** perlinNoise = NoiseUtil::_getEmpty2dArray(width, height);
             float*** octaves = new float**[numOctaves];
 
