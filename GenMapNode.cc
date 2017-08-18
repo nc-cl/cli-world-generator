@@ -24,26 +24,35 @@ string GenMapNode::getBiomeString(bool useColor) {
     }
 
     if (useColor) {
-        string color;
+        string fgColor, bgColor;
 
         switch (_biome) {
             case BIOME_SEA:
-                color = "34";
+                fgColor = "27";
+                bgColor = "18";
                 break;
             case BIOME_COAST:
-                color = "36";
+                fgColor = "27";
+                bgColor = "20";
                 break;
             case BIOME_GRASSLAND:
-                color = "32";
+                fgColor = "46";
+                bgColor = "22";
                 break;
             case BIOME_MOUNTAIN:
-                color = "30";
+                fgColor = "249";
+                bgColor = "234";
+                break;
+            case BIOME_SNOW:
+                fgColor = "15";
+                bgColor = "239";
                 break;
             default:
-                color = "37";
+                fgColor = "15";
+                bgColor = "0";
         }
 
-        return "\033[1;" + color + "m" + biomeChar + "\033[0m";
+        return "\033[48;5;" + bgColor + "m\033[38;5;" + fgColor + "m" + biomeChar + "\033[0m";
     }
 
     return biomeChar;
