@@ -29,23 +29,23 @@ string GenMapNode::getBiomeString(bool useColor) {
         switch (_biome) {
             case BIOME_SEA:
                 fgColor = "27";
-                bgColor = "18";
+                bgColor = "0";
                 break;
             case BIOME_COAST:
                 fgColor = "27";
-                bgColor = "20";
+                bgColor = "17";
                 break;
             case BIOME_GRASSLAND:
-                fgColor = "46";
-                bgColor = "22";
+                fgColor = "40";
+                bgColor = "233";
                 break;
             case BIOME_MOUNTAIN:
                 fgColor = "249";
-                bgColor = "234";
+                bgColor = "0";
                 break;
             case BIOME_SNOW:
                 fgColor = "15";
-                bgColor = "239";
+                bgColor = "234";
                 break;
             default:
                 fgColor = "15";
