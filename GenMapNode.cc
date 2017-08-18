@@ -54,13 +54,13 @@ void GenMapNode::setBiome(int biome) {
 }
 
 void GenMapNode::setComputedBiome(float biomeVal) {
-    if (biomeVal <= 0.35f) {
+    if (biomeVal <= 0.45f) {
         setBiome(BIOME_SEA);
-    } else if (biomeVal <= 0.49f) {
+    } else if (biomeVal <= 0.55f) {
         setBiome(BIOME_COAST);
-    } else if (biomeVal <= 0.79f) {
+    } else if (biomeVal <= 0.75f) {
         setBiome(BIOME_GRASSLAND);
-    } else if (biomeVal <= 0.89f) {
+    } else if (biomeVal <= 0.85f) {
         setBiome(BIOME_MOUNTAIN);
     } else {
         setBiome(BIOME_SNOW);
