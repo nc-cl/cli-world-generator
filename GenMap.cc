@@ -20,10 +20,17 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
 }
 
 void GenMap::_setMapFromNoise(float** height, float** rfall) {
-    for (int i = 0; i < _sizeX; i++) {
-        for (int j = 0; j < _sizeY; j++) {
-            _map[i][j].setHeight(height[i][j]);
-            _map[i][j].setRainfall(rfall[i][j]);
+    int equatorIndex = _sizeY / 2;
+    int tropicRange = abs(equatorIndex - _sizeY/3);
+    bool isTropical;
+
+    for (int y = 0; y < _sizeY; y++) {
+        isTropical = abs(equatorIndex - y) <= tropicRange;
+
+        for (int x = 0; x < _sizeX; x++) {
+            _map[x][y].setHeight(height[x][y]);
+            _map[x][y].setRainfall(rfall[x][y]);
+            _map[x][y].setIsTropical(isTropical);
         }
     }
 }
@@ -55,15 +62,15 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
 
     int maxDistanceFromBorder = max(min(_sizeX, _sizeY) / 5, 1);
 
-    for (int i = 0; i < _sizeX; i++) {
-        for (int j = 0; j < _sizeY; j++) {
-            int distanceFromBorder = _getDistanceFromOutOfBounds(i, j);
+    for (int x = 0; x < _sizeX; x++) {
+        for (int y = 0; y < _sizeY; y++) {
+            int distanceFromBorder = _getDistanceFromOutOfBounds(x, y);
 
             if (distanceFromBorder <= maxDistanceFromBorder) {
-                heightNoise[i][j] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
+                heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
             }
 
-            heightNoise[i][j] = max(heightNoise[i][j], 0.0f);
+            heightNoise[x][y] = max(heightNoise[x][y], 0.0f);
         }
     }
 
@@ -73,9 +80,9 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
 void GenMap::printMap(bool useColor) {
     stringstream strstr;
 
-    for (int i = _sizeY-1; i > -1; i--) {
-        for (int j = 0; j < _sizeX; j++) {
-            strstr << _map[j][i].getBiomeString(useColor);
+    for (int y = _sizeY-1; y > -1; y--) {
+        for (int x = 0; x < _sizeX; x++) {
+            strstr << _map[x][y].getBiomeString(useColor);
         }
 
         strstr << endl;

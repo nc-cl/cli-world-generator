@@ -18,9 +18,11 @@ class GenMap {
         int _getDistanceFromOutOfBounds(int, int);
         void _setMapFromNoise(float**, float**);
     public:
-        GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) {
-            _initMap();
-        }
+        GenMap(void) :
+            _sizeX(DEFAULT_SIZE_X),
+            _sizeY(DEFAULT_SIZE_Y) {
+                _initMap();
+            }
 
         GenMap(int x, int y) {
             _sizeX = max(x, 0);
