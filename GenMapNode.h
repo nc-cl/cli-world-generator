@@ -5,9 +5,12 @@ using namespace std;
 
 const int BIOME_SEA = 0;
 const int BIOME_COAST = 1;
-const int BIOME_GRASSLAND = 2;
-const int BIOME_MOUNTAIN = 3;
-const int BIOME_SNOW = 4;
+const int BIOME_MARSH = 2;
+const int BIOME_GRASSLAND = 3;
+const int BIOME_FOREST = 4;
+const int BIOME_MOUNTAIN = 5;
+const int BIOME_MOUNTAIN_SNOW = 6;
+const int BIOME_MOUNTAIN_FOREST = 7;
 
 class GenMapNode {
     private:

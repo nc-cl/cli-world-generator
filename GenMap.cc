@@ -47,7 +47,7 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
 
     float** rainfallNoise = NoiseUtil::getPerlinNoise(
         DEFAULT_OCTAVES,
-        DEFAULT_LACUNARITY,
+        3.0f,
         DEFAULT_PERSISTENCE,
         _sizeX,
         _sizeY,
