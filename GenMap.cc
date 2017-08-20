@@ -19,10 +19,11 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
     return min(distanceX, distanceY);
 }
 
-void GenMap::_setMapFromNoise(float** noise) {
+void GenMap::_setMapFromNoise(float** height, float** rfall) {
     for (int i = 0; i < _sizeX; i++) {
         for (int j = 0; j < _sizeY; j++) {
-            _map[i][j].setHeight(noise[i][j]);
+            _map[i][j].setHeight(height[i][j]);
+            _map[i][j].setRainfall(rfall[i][j]);
         }
     }
 }
@@ -36,7 +37,22 @@ int GenMap::getHeight() {
 }
 
 void GenMap::generate(int octaves, float lacunarity, float persistence) {
-    float** noise = NoiseUtil::getPerlinNoise(octaves, lacunarity, persistence, _sizeX, _sizeY, NoiseUtil::getWhiteNoise(_sizeX, _sizeY));
+    float** heightNoise = NoiseUtil::getPerlinNoise(
+        octaves,
+        lacunarity,
+        persistence,
+        _sizeX,
+        _sizeY,
+        NoiseUtil::getWhiteNoise(_sizeX, _sizeY));
+
+    float** rainfallNoise = NoiseUtil::getPerlinNoise(
+        DEFAULT_OCTAVES,
+        DEFAULT_LACUNARITY,
+        DEFAULT_PERSISTENCE,
+        _sizeX,
+        _sizeY,
+        NoiseUtil::getWhiteNoise(_sizeX,_sizeY));
+
     int maxDistanceFromBorder = max(min(_sizeX, _sizeY) / 5, 1);
 
     for (int i = 0; i < _sizeX; i++) {
@@ -44,14 +60,14 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
             int distanceFromBorder = _getDistanceFromOutOfBounds(i, j);
 
             if (distanceFromBorder <= maxDistanceFromBorder) {
-                noise[i][j] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
+                heightNoise[i][j] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
             }
 
-            noise[i][j] = max(noise[i][j], 0.0f);
+            heightNoise[i][j] = max(heightNoise[i][j], 0.0f);
         }
     }
 
-    _setMapFromNoise(noise);
+    _setMapFromNoise(heightNoise, rainfallNoise);
 }
 
 void GenMap::printMap(bool useColor) {

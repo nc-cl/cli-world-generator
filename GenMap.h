@@ -16,7 +16,7 @@ class GenMap {
         vector<vector<GenMapNode> > _map;
         void _initMap(void);
         int _getDistanceFromOutOfBounds(int, int);
-        void _setMapFromNoise(float**);
+        void _setMapFromNoise(float**, float**);
     public:
         GenMap(void) : _sizeX(DEFAULT_SIZE_X), _sizeY(DEFAULT_SIZE_Y) {
             _initMap();

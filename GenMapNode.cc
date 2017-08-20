@@ -75,3 +75,7 @@ string GenMapNode::getBiomeString(bool useColor) {
 void GenMapNode::setHeight(float height) {
     _height = height;
 }
+
+void GenMapNode::setRainfall(float rfall) {
+    _rainfall = rfall;
+}
