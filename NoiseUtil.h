@@ -5,7 +5,7 @@ using namespace std;
 
 const int DEFAULT_OCTAVES = 4;
 const float DEFAULT_LACUNARITY = 2.0f;
-const float DEFAULT_PERSISTENCE = 0.5f;
+const float DEFAULT_PERSISTENCE = 0.4f;
 
 class NoiseUtil {
     private:

@@ -11,14 +11,13 @@ const int BIOME_SNOW = 4;
 
 class GenMapNode {
     private:
-        int _biome;
+        float _height;
     public:
-        GenMapNode(void) { setBiome(BIOME_SEA); }
-        GenMapNode(int biome) { setBiome(biome); }
+        GenMapNode(void) { setHeight(0.0f); }
+        GenMapNode(float height) { setHeight(height); }
         int getBiome(void);
         string getBiomeString(bool);
-        void setBiome(int);
-        void setComputedBiome(float);
+        void setHeight(float);
 };
 
 #endif

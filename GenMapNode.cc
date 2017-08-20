@@ -1,13 +1,27 @@
 #include "GenMapNode.h"
 
 int GenMapNode::getBiome() {
-    return _biome;
+    if (_height >= 0.85f) {
+        return BIOME_SNOW;
+    }
+    if (_height >= 0.75f) {
+        return BIOME_MOUNTAIN;
+    }
+    if (_height >= 0.55f) {
+        return BIOME_GRASSLAND;
+    }
+    if (_height >= 0.45f) {
+        return BIOME_COAST;
+    }
+
+    return BIOME_SEA;
 }
 
 string GenMapNode::getBiomeString(bool useColor) {
+    int biome = getBiome();
     string biomeChar;
 
-    switch (_biome) {
+    switch (biome) {
         case BIOME_SEA:
         case BIOME_COAST:
             biomeChar = "~";
@@ -26,7 +40,7 @@ string GenMapNode::getBiomeString(bool useColor) {
     if (useColor) {
         string fgColor, bgColor;
 
-        switch (_biome) {
+        switch (biome) {
             case BIOME_SEA:
                 fgColor = "27";
                 bgColor = "0";
@@ -58,20 +72,6 @@ string GenMapNode::getBiomeString(bool useColor) {
     return biomeChar;
 }
 
-void GenMapNode::setBiome(int biome) {
-    _biome = biome;
-}
-
-void GenMapNode::setComputedBiome(float biomeVal) {
-    if (biomeVal <= 0.45f) {
-        setBiome(BIOME_SEA);
-    } else if (biomeVal <= 0.55f) {
-        setBiome(BIOME_COAST);
-    } else if (biomeVal <= 0.75f) {
-        setBiome(BIOME_GRASSLAND);
-    } else if (biomeVal <= 0.85f) {
-        setBiome(BIOME_MOUNTAIN);
-    } else {
-        setBiome(BIOME_SNOW);
-    }
+void GenMapNode::setHeight(float height) {
+    _height = height;
 }
