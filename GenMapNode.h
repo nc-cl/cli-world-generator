@@ -13,8 +13,6 @@ const int BIOME_SAVANNA = 6;
 const int BIOME_RAINFOREST = 7;
 const int BIOME_MOUNTAIN = 8;
 const int BIOME_MOUNTAIN_SNOW = 9;
-const int BIOME_MOUNTAIN_FOREST = 10;
-const int BIOME_MOUNTAIN_RAINFOREST = 11;
 
 class GenMapNode {
     private:

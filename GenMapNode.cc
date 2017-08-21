@@ -1,33 +1,28 @@
 #include "GenMapNode.h"
 
 int GenMapNode::getBiome() {
-    if ((!_isTropical && _height >= 0.85f) || (_isTropical && _height >= 0.95f)) {
+    if ((!_isTropical && _height >= 0.85f) || (_isTropical && _height >= 0.99f)) {
         return BIOME_MOUNTAIN_SNOW;
     }
     if (_height >= 0.75f) {
-        if (_isTropical && _height < 0.80f && _rainfall > 0.80f) {
-            return BIOME_MOUNTAIN_RAINFOREST;
-        }
-        if (_height < 0.80f && _rainfall > 0.50f && _rainfall <= 0.60f) {
-            return BIOME_MOUNTAIN_FOREST;
-        }
-
         return BIOME_MOUNTAIN;
     }
     if (_height >= 0.50f) {
-        if (_isTropical && _rainfall > 0.80f) {
-            return BIOME_RAINFOREST;
+        if (_isTropical) {
+            if (_height >= 0.55f && _rainfall >= 0.80f) {
+                return BIOME_RAINFOREST;
+            }
+            if (_height >= 0.55f && _rainfall < 0.25f) {
+                return BIOME_DESERT;
+            }
+            if (_rainfall < 0.35f) {
+                return BIOME_SAVANNA;
+            }
         }
-        if (_isTropical && _rainfall <= 0.35f && _rainfall > 0.25f) {
-            return BIOME_SAVANNA;
-        }
-        if (_isTropical && _rainfall <= 0.25f) {
-            return BIOME_DESERT;
-        }
-        if (_height < 0.55f && _rainfall > 0.70f) {
+        if (_height < 0.55f && _rainfall >= 0.70f) {
             return BIOME_MARSH;
         }
-        if (_rainfall > 0.50f && _rainfall <= 0.60f) {
+        if (_height >= 0.55f && _rainfall >= 0.50f && _rainfall < 0.60f) {
             return BIOME_FOREST;
         }
 
@@ -65,8 +60,6 @@ string GenMapNode::getBiomeString(bool useColor) {
             break;
         case BIOME_MOUNTAIN:
         case BIOME_MOUNTAIN_SNOW:
-        case BIOME_MOUNTAIN_FOREST:
-        case BIOME_MOUNTAIN_RAINFOREST:
             biomeChar = '^';
             break;
         default:
@@ -116,14 +109,6 @@ string GenMapNode::getBiomeString(bool useColor) {
             case BIOME_MOUNTAIN_SNOW:
                 fgColor = "15";
                 bgColor = "236";
-                break;
-            case BIOME_MOUNTAIN_FOREST:
-                fgColor = "34";
-                bgColor = "233";
-                break;
-            case BIOME_MOUNTAIN_RAINFOREST:
-                fgColor = "22";
-                bgColor = "233";
                 break;
             default:
                 fgColor = "15";
