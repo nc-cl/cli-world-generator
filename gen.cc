@@ -16,7 +16,21 @@ int main(int argc, char* argv[]) {
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
+        if (strcmp(argv[i], "--width") == 0 || strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "-x") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    width = stoi(argv[i+1]);
+                    i++;
+                } catch (const invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--height") == 0 || strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-y") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    height = stoi(argv[i+1]);
+                    i++;
+                } catch (const invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
             if (i + 1 < argc) {
                 try {
                     width = stoi(argv[i+1]);
