@@ -18,22 +18,22 @@ class GenMapNode {
     private:
         float _height;
         float _rainfall;
-        bool _isTropical;
+        float _temperature;
     public:
         GenMapNode(void) :
             _height(0.0f),
             _rainfall(0.0f),
-            _isTropical(false) {}
-        GenMapNode(float height, float rfall, bool trop) :
+            _temperature(0.0f) {}
+        GenMapNode(float height, float rfall, float temp) :
             _height(height),
             _rainfall(rfall),
-            _isTropical(trop) {}
+            _temperature(temp) {}
 
         int getBiome(void);
         string getBiomeString(bool);
         void setHeight(float);
         void setRainfall(float);
-        void setIsTropical(bool);
+        void setTemperature(float);
 };
 
 #endif

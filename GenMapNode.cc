@@ -1,14 +1,14 @@
 #include "GenMapNode.h"
 
 int GenMapNode::getBiome() {
-    if ((!_isTropical && _height >= 0.85f) || (_isTropical && _height >= 0.99f)) {
+    if ((_temperature < 0.75f && _height >= 0.85f) || (_temperature >= 0.75f && _height >= 0.99f)) {
         return BIOME_MOUNTAIN_SNOW;
     }
     if (_height >= 0.75f) {
         return BIOME_MOUNTAIN;
     }
     if (_height >= 0.50f) {
-        if (_isTropical) {
+        if (_temperature >= 0.75f) {
             if (_height >= 0.55f && _rainfall >= 0.80f) {
                 return BIOME_RAINFOREST;
             }
@@ -129,6 +129,6 @@ void GenMapNode::setRainfall(float rfall) {
     _rainfall = rfall;
 }
 
-void GenMapNode::setIsTropical(bool isTropical) {
-    _isTropical = isTropical;
+void GenMapNode::setTemperature(float temp) {
+    _temperature = temp;
 }

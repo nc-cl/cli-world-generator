@@ -19,18 +19,12 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
     return min(distanceX, distanceY);
 }
 
-void GenMap::_setMapFromNoise(float** height, float** rfall) {
-    int equatorIndex = _sizeY / 2;
-    int tropicRange = abs(equatorIndex - _sizeY/3);
-    bool isTropical;
-
+void GenMap::_setMapFromNoise(float** height, float** rfall, float** temp) {
     for (int y = 0; y < _sizeY; y++) {
-        isTropical = abs(equatorIndex - y) <= tropicRange;
-
         for (int x = 0; x < _sizeX; x++) {
             _map[x][y].setHeight(height[x][y]);
             _map[x][y].setRainfall(rfall[x][y]);
-            _map[x][y].setIsTropical(isTropical);
+            _map[x][y].setTemperature(temp[x][y]);
         }
     }
 }
@@ -60,6 +54,14 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
         _sizeY,
         NoiseUtil::getWhiteNoise(_sizeX,_sizeY));
 
+    float** temperatureNoise = NoiseUtil::getPerlinNoise(
+        DEFAULT_OCTAVES,
+        3.0f,
+        DEFAULT_PERSISTENCE,
+        _sizeX,
+        _sizeY,
+        NoiseUtil::getWhiteNoise(_sizeX,_sizeY));
+
     int maxDistanceFromBorder = max(min(_sizeX, _sizeY) / 5, 1);
 
     for (int x = 0; x < _sizeX; x++) {
@@ -74,7 +76,7 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
         }
     }
 
-    _setMapFromNoise(heightNoise, rainfallNoise);
+    _setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
 }
 
 void GenMap::printMap(bool useColor) {
