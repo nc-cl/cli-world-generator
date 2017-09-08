@@ -50,17 +50,17 @@ string GenMapNode::getBiomeString(bool useColor) {
             biomeChar = "G";
             break;
         case BIOME_DESERT:
-            biomeChar = 'm';
+            biomeChar = "m";
             break;
         case BIOME_FOREST:
             biomeChar = "t";
             break;
         case BIOME_RAINFOREST:
-            biomeChar = 'T';
+            biomeChar = "T";
             break;
         case BIOME_MOUNTAIN:
         case BIOME_MOUNTAIN_SNOW:
-            biomeChar = '^';
+            biomeChar = "^";
             break;
         default:
             biomeChar = "?";

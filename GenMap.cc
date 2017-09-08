@@ -20,11 +20,25 @@ int GenMap::_getDistanceFromOutOfBounds(int x, int y) {
 }
 
 void GenMap::_setMapFromNoise(float** height, float** rfall, float** temp) {
+    int equatorIndex = _sizeY / 2;
+    int tropicRange = abs(equatorIndex - _sizeY/3);
+
+    int equatorDistance;
+    float tempMod;
+
     for (int y = 0; y < _sizeY; y++) {
+        equatorDistance = abs(equatorIndex - y);
+
+        if (equatorDistance <= tropicRange) {
+            tempMod = max(0.5f - equatorDistance*0.01f, 0.2f);
+        } else {
+            tempMod = max(0.5f - equatorDistance*0.02f, -0.2f);
+        }
+
         for (int x = 0; x < _sizeX; x++) {
             _map[x][y].setHeight(height[x][y]);
             _map[x][y].setRainfall(rfall[x][y]);
-            _map[x][y].setTemperature(temp[x][y]);
+            _map[x][y].setTemperature(max(temp[x][y] + tempMod, 0.0f));
         }
     }
 }
