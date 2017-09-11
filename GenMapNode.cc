@@ -25,6 +25,9 @@ int GenMapNode::getBiome() {
         if (_height >= 0.55f && _rainfall >= 0.50f && _rainfall < 0.60f) {
             return BIOME_FOREST;
         }
+        if (_temperature < 0.30f) {
+            return BIOME_SNOW;
+        }
 
         return BIOME_GRASSLAND;
     }
@@ -47,16 +50,15 @@ string GenMapNode::getBiomeString(bool useColor) {
             break;
         case BIOME_GRASSLAND:
         case BIOME_SAVANNA:
+        case BIOME_SNOW:
             biomeChar = "G";
             break;
         case BIOME_DESERT:
             biomeChar = "m";
             break;
         case BIOME_FOREST:
-            biomeChar = "t";
-            break;
         case BIOME_RAINFOREST:
-            biomeChar = "T";
+            biomeChar = "t";
             break;
         case BIOME_MOUNTAIN:
         case BIOME_MOUNTAIN_SNOW:
@@ -106,6 +108,9 @@ string GenMapNode::getBiomeString(bool useColor) {
                 fgColor = "249";
                 bgColor = "233";
                 break;
+            case BIOME_SNOW:
+                fgColor = "15";
+                bgColor = "233";
             case BIOME_MOUNTAIN_SNOW:
                 fgColor = "15";
                 bgColor = "236";
