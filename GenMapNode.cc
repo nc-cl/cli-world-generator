@@ -1,14 +1,17 @@
 #include "GenMapNode.h"
 
 int GenMapNode::getBiome() {
-    if ((_temperature < 0.75f && _height >= 0.85f) || (_temperature >= 0.75f && _height >= 0.99f)) {
+    if (_height >= 0.90f) {
         return BIOME_MOUNTAIN_SNOW;
     }
     if (_height >= 0.75f) {
+        if (_temperature < 0.20f) {
+            return BIOME_MOUNTAIN_SNOW;
+        }
         return BIOME_MOUNTAIN;
     }
     if (_height >= 0.50f) {
-        if (_temperature >= 0.75f) {
+        if (_temperature >= 0.70f) {
             if (_height >= 0.55f && _rainfall >= 0.80f) {
                 return BIOME_RAINFOREST;
             }
@@ -19,14 +22,14 @@ int GenMapNode::getBiome() {
                 return BIOME_SAVANNA;
             }
         }
-        if (_height < 0.55f && _rainfall >= 0.70f) {
-            return BIOME_MARSH;
-        }
         if (_height >= 0.55f && _rainfall >= 0.50f && _rainfall < 0.60f) {
             return BIOME_FOREST;
         }
-        if (_temperature < 0.30f) {
+        if (_temperature < 0.20f) {
             return BIOME_SNOW;
+        }
+        if (_height < 0.55f && _rainfall >= 0.70f) {
+            return BIOME_MARSH;
         }
 
         return BIOME_GRASSLAND;
@@ -50,11 +53,9 @@ string GenMapNode::getBiomeString(bool useColor) {
             break;
         case BIOME_GRASSLAND:
         case BIOME_SAVANNA:
+        case BIOME_DESERT:
         case BIOME_SNOW:
             biomeChar = "G";
-            break;
-        case BIOME_DESERT:
-            biomeChar = "m";
             break;
         case BIOME_FOREST:
         case BIOME_RAINFOREST:
