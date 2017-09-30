@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 #include "GenMap.h"
-#include "NoiseUtil.h"
+#include "NoiseGenerator.h"
 
 void GenMap::_initMap() {
     _map.resize(_sizeX);
@@ -52,29 +52,29 @@ void GenMap::generate(int octaves, float lacunarity, float persistence, int temp
     temperature = max(min(temperature, 100), 0);
     float tempMod = (temperature - 50) / 100.0f * 2;
 
-    float** heightNoise = NoiseUtil::getPerlinNoise(
+    float** heightNoise = NoiseGenerator::getPerlinNoise(
         octaves,
         lacunarity,
         persistence,
         _sizeX,
         _sizeY,
-        NoiseUtil::getWhiteNoise(_sizeX, _sizeY));
+        NoiseGenerator::getWhiteNoise(_sizeX, _sizeY));
 
-    float** rainfallNoise = NoiseUtil::getPerlinNoise(
+    float** rainfallNoise = NoiseGenerator::getPerlinNoise(
         DEFAULT_OCTAVES,
         3.0f,
         DEFAULT_PERSISTENCE,
         _sizeX,
         _sizeY,
-        NoiseUtil::getWhiteNoise(_sizeX,_sizeY));
+        NoiseGenerator::getWhiteNoise(_sizeX,_sizeY));
 
-    float** temperatureNoise = NoiseUtil::getPerlinNoise(
+    float** temperatureNoise = NoiseGenerator::getPerlinNoise(
         DEFAULT_OCTAVES,
         3.0f,
         DEFAULT_PERSISTENCE,
         _sizeX,
         _sizeY,
-        NoiseUtil::getWhiteNoise(_sizeX,_sizeY));
+        NoiseGenerator::getWhiteNoise(_sizeX,_sizeY));
 
     int maxDistanceFromBorder = max(min(_sizeX, _sizeY) / 5, 1);
 
