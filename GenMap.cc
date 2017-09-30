@@ -48,7 +48,10 @@ int GenMap::getHeight() {
     return _sizeY;
 }
 
-void GenMap::generate(int octaves, float lacunarity, float persistence) {
+void GenMap::generate(int octaves, float lacunarity, float persistence, int temperature) {
+    temperature = max(min(temperature, 100), 0);
+    float tempMod = (temperature - 50) / 100.0f * 2;
+
     float** heightNoise = NoiseUtil::getPerlinNoise(
         octaves,
         lacunarity,
@@ -84,6 +87,9 @@ void GenMap::generate(int octaves, float lacunarity, float persistence) {
             }
 
             heightNoise[x][y] = max(heightNoise[x][y], 0.0f);
+
+            temperatureNoise[x][y] += tempMod;
+            temperatureNoise[x][y] = max(min(temperatureNoise[x][y], 1.0f), 0.0f);
         }
     }
 

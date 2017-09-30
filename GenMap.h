@@ -32,7 +32,7 @@ class GenMap {
 
         int getWidth(void);
         int getHeight(void);
-        void generate(int, float, float);
+        void generate(int, float, float, int);
         void printMap(bool);
 };
 

@@ -13,6 +13,8 @@ int main(int argc, char* argv[]) {
     float lacunarity = DEFAULT_LACUNARITY;
     float persistence = DEFAULT_PERSISTENCE;
 
+    int temperature = 50;
+
     bool useColor = true;
 
     for (int i = 1; i < argc; i++) {
@@ -63,6 +65,11 @@ int main(int argc, char* argv[]) {
                     i++;
                 } catch (const invalid_argument& e) {}
             }
+        } else if (strcmp(argv[i], "--temperature") == 0 || strcmp(argv[i], "-t") == 0) {
+            try {
+                temperature = stoi(argv[i+1]);
+                i++;
+            } catch (const invalid_argument& e) {}
         } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
             useColor = false;
         }
@@ -71,7 +78,7 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generate(octaves, lacunarity, persistence);
+    gmap.generate(octaves, lacunarity, persistence, temperature);
     gmap.printMap(useColor);
 
     return 0;
