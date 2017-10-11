@@ -2,6 +2,7 @@
 #include <string.h>
 #include "GenMap.cc"
 #include "GenMapNode.cc"
+#include "NoiseGenerator.h"
 
 using namespace std;
 
@@ -78,7 +79,52 @@ int main(int argc, char* argv[]) {
     srand(time(NULL));
 
     GenMap gmap(width, height);
-    gmap.generate(octaves, lacunarity, persistence, temperature);
+
+    temperature = max(min(temperature, 100), 0);
+    float tempMod = (temperature - 50) / 100.0f * 2;
+
+    float** heightNoise = NoiseGenerator::getPerlinNoise(
+        octaves,
+        lacunarity,
+        persistence,
+        width,
+        height,
+        NoiseGenerator::getWhiteNoise(width, height));
+
+    float** rainfallNoise = NoiseGenerator::getPerlinNoise(
+        DEFAULT_OCTAVES,
+        3.0f,
+        DEFAULT_PERSISTENCE,
+        width,
+        height,
+        NoiseGenerator::getWhiteNoise(width,height));
+
+    float** temperatureNoise = NoiseGenerator::getPerlinNoise(
+        DEFAULT_OCTAVES,
+        3.0f,
+        DEFAULT_PERSISTENCE,
+        width,
+        height,
+        NoiseGenerator::getWhiteNoise(width,height));
+
+    int maxDistanceFromBorder = max(min(width, height) / 5, 1);
+
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            int distanceFromBorder = gmap.getDistanceFromOutOfBounds(x, y);
+
+            if (distanceFromBorder <= maxDistanceFromBorder) {
+                heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
+            }
+
+            heightNoise[x][y] = max(heightNoise[x][y], 0.0f);
+
+            temperatureNoise[x][y] += tempMod;
+            temperatureNoise[x][y] = max(min(temperatureNoise[x][y], 1.0f), 0.0f);
+        }
+    }
+
+    gmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
     gmap.printMap(useColor);
 
     return 0;
