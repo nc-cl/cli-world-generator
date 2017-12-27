@@ -2,7 +2,7 @@
 #include <string.h>
 #include "GenMap.cc"
 #include "GenMapNode.cc"
-#include "NoiseGenerator.h"
+#include "NoiseGenerator.cc"
 
 using namespace std;
 
