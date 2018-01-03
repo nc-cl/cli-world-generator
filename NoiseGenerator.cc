@@ -3,11 +3,11 @@
 float** NoiseGenerator::_getEmpty2dArray(int width, int height) {
     float** arr = new float*[width];
 
-        for (int i = 0; i < width; i++) {
-            arr[i] = new float[height];
-        }
+    for (int i = 0; i < width; i++) {
+        arr[i] = new float[height];
+    }
 
-        return arr;
+    return arr;
 }
 
 float** NoiseGenerator::_getOctave(float** noise, int octaveNumber, float lacunarity, int width, int height) {
@@ -47,7 +47,7 @@ float** NoiseGenerator::getWhiteNoise(int width, int height) {
         }
     }
 
-        return whiteNoise;
+    return whiteNoise;
 }
 
 float** NoiseGenerator::getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height) {
