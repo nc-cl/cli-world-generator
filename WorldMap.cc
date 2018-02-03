@@ -2,9 +2,9 @@
 #include <math.h>
 #include <algorithm>
 #include <sstream>
-#include "GenMap.h"
+#include "WorldMap.h"
 
-void GenMap::_initMap() {
+void WorldMap::_initMap() {
     _map.resize(_sizeX);
 
     for (int i = 0; i < _sizeX; i++) {
@@ -12,21 +12,21 @@ void GenMap::_initMap() {
     }
 }
 
-int GenMap::getWidth() {
+int WorldMap::getWidth() {
     return _sizeX;
 }
 
-int GenMap::getHeight() {
+int WorldMap::getHeight() {
     return _sizeY;
 }
 
-int GenMap::getDistanceFromOutOfBounds(int x, int y) {
+int WorldMap::getDistanceFromOutOfBounds(int x, int y) {
     int distanceX = min(x + 1, abs(x - _sizeX));
     int distanceY = min(y + 1, abs(y - _sizeY));
     return min(distanceX, distanceY);
 }
 
-void GenMap::setMapFromNoise(float** height, float** rfall, float** temp) {
+void WorldMap::setMapFromNoise(float** height, float** rfall, float** temp) {
     for (int y = 0; y < _sizeY; y++) {
         for (int x = 0; x < _sizeX; x++) {
             _map[x][y].setHeight(height[x][y]);
@@ -36,7 +36,7 @@ void GenMap::setMapFromNoise(float** height, float** rfall, float** temp) {
     }
 }
 
-void GenMap::printMap(bool useColor) {
+void WorldMap::printMap(bool useColor) {
     stringstream strstr;
 
     for (int y = _sizeY-1; y > -1; y--) {

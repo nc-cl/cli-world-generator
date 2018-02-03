@@ -15,17 +15,17 @@ const int BIOME_MOUNTAIN = 8;
 const int BIOME_SNOW = 9;
 const int BIOME_MOUNTAIN_SNOW = 10;
 
-class GenMapNode {
+class WorldMapSection {
     private:
         float _height;
         float _rainfall;
         float _temperature;
     public:
-        GenMapNode(void) :
+        WorldMapSection(void) :
             _height(0.0f),
             _rainfall(0.0f),
             _temperature(0.0f) {}
-        GenMapNode(float height, float rfall, float temp) :
+        WorldMapSection(float height, float rfall, float temp) :
             _height(height),
             _rainfall(rfall),
             _temperature(temp) {}

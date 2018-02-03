@@ -1,6 +1,6 @@
-#include "GenMapNode.h"
+#include "WorldMapSection.h"
 
-int GenMapNode::getBiome() {
+int WorldMapSection::getBiome() {
     if (_height >= 0.90f) {
         return BIOME_MOUNTAIN_SNOW;
     }
@@ -41,7 +41,7 @@ int GenMapNode::getBiome() {
     return BIOME_SEA;
 }
 
-string GenMapNode::getBiomeString(bool useColor) {
+string WorldMapSection::getBiomeString(bool useColor) {
     int biome = getBiome();
     string biomeChar;
 
@@ -127,14 +127,14 @@ string GenMapNode::getBiomeString(bool useColor) {
     return biomeChar;
 }
 
-void GenMapNode::setHeight(float height) {
+void WorldMapSection::setHeight(float height) {
     _height = height;
 }
 
-void GenMapNode::setRainfall(float rfall) {
+void WorldMapSection::setRainfall(float rfall) {
     _rainfall = rfall;
 }
 
-void GenMapNode::setTemperature(float temp) {
+void WorldMapSection::setTemperature(float temp) {
     _temperature = temp;
 }

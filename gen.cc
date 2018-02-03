@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string.h>
-#include "GenMap.cc"
-#include "GenMapNode.cc"
+#include "WorldMap.cc"
+#include "WorldMapSection.cc"
 #include "NoiseGenerator.cc"
 
 using namespace std;
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
-    GenMap gmap(width, height);
+    WorldMap wmap(width, height);
 
     temperature = max(min(temperature, 100), 0);
     float tempMod = (temperature - 50) / 100.0f * 2;
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            int distanceFromBorder = gmap.getDistanceFromOutOfBounds(x, y);
+            int distanceFromBorder = wmap.getDistanceFromOutOfBounds(x, y);
 
             if (distanceFromBorder <= maxDistanceFromBorder) {
                 heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * abs(distanceFromBorder - (maxDistanceFromBorder + 1));
@@ -124,8 +124,8 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    gmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
-    gmap.printMap(useColor);
+    wmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
+    wmap.printMap(useColor);
 
     return 0;
 }
