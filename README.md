@@ -1,8 +1,5 @@
-## GenMap
+## CLI World Generator
 A simple command line map generator. Perlin noise is used to generate various geographical properties, from which map biomes are computed.
-
-Compiled using:<br>
-g++ -std=c++11 -Wall -o gen gen.cc
 
 ## Options
 <b>--no-color</b>, <b>-nc</b><br>
