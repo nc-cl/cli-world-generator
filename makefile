@@ -1,7 +1,15 @@
+CPPC = g++
+CFLAGS = -std=c++11 -Wall
+TARGET = gen.cc
+OUTPUT = gen
+OUTPUT_PRE = pre.cc
 
 default:
-	@ g++ -std=c++11 -Wall -o gen gen.cc
-	
+	@ $(CPPC) $(CFLAGS) $(TARGET) -o $(OUTPUT)
+
+pre:
+	@ $(CPPC) $(CFLAGS) -E $(TARGET) > $(OUTPUT_PRE) && $(CPPC) $(CFLAGS) $(OUTPUT_PRE) -o $(OUTPUT)
+
 clean:
-	@ rm -f gen gen.exe
+	@ rm -f $(OUTPUT) $(OUTPUT).exe $(OUTPUT_PRE)
 
