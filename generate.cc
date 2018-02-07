@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string.h>
-#include "WorldMap.cc"
-#include "WorldMapSection.cc"
-#include "NoiseGenerator.cc"
+#include "world_map.cc"
+#include "world_map_section.cc"
+#include "noise_generator.cc"
 
 using namespace std;
 

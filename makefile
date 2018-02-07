@@ -1,10 +1,12 @@
 CPPC = g++
 CFLAGS = -std=c++11 -Wall
-TARGET = gen.cc
-OUTPUT = gen
+TARGET = generate.cc
+OUTPUT = generate
 OUTPUT_PRE = pre.cc
 
-default:
+.PHONY: generate pre clean
+
+generate:
 	@ $(CPPC) $(CFLAGS) $(TARGET) -o $(OUTPUT)
 
 pre:

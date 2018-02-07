@@ -1,6 +1,6 @@
 #include <vector>
 #include <array>
-#include "WorldMapSection.h"
+#include "world_map_section.h"
 
 #ifndef GEN_MAP_H_
 #define GEN_MAP_H_

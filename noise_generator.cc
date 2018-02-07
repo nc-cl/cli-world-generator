@@ -1,4 +1,4 @@
-#include "NoiseGenerator.h"
+#include "noise_generator.h"
 
 float** NoiseGenerator::_getEmpty2dArray(int width, int height) {
     float** arr = new float*[width];

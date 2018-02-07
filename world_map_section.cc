@@ -1,4 +1,4 @@
-#include "WorldMapSection.h"
+#include "world_map_section.h"
 
 int WorldMapSection::getBiome() {
     if (_height >= 0.90f) {

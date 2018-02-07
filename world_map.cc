@@ -2,7 +2,7 @@
 #include <math.h>
 #include <algorithm>
 #include <sstream>
-#include "WorldMap.h"
+#include "world_map.h"
 
 void WorldMap::_initMap() {
     _map.resize(_sizeX);
