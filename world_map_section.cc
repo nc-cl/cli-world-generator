@@ -41,9 +41,9 @@ int WorldMapSection::getBiome() {
     return BIOME_SEA;
 }
 
-string WorldMapSection::getBiomeString(bool useColor) {
+std::string WorldMapSection::getBiomeString(bool useColor) {
     int biome = getBiome();
-    string biomeChar;
+    std::string biomeChar;
 
     switch (biome) {
         case BIOME_SEA:
@@ -70,7 +70,7 @@ string WorldMapSection::getBiomeString(bool useColor) {
     }
 
     if (useColor) {
-        string fgColor, bgColor;
+        std::string fgColor, bgColor;
 
         switch (biome) {
             case BIOME_SEA:

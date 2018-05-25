@@ -1,7 +1,7 @@
+#include <string>
+
 #ifndef GEN_MAP_NODE_H_
 #define GEN_MAP_NODE_H_
-
-using namespace std;
 
 const int BIOME_SEA = 0;
 const int BIOME_COAST = 1;
@@ -31,7 +31,7 @@ class WorldMapSection {
             _temperature(temp) {}
 
         int getBiome(void);
-        string getBiomeString(bool);
+        std::string getBiomeString(bool);
         void setHeight(float);
         void setRainfall(float);
         void setTemperature(float);

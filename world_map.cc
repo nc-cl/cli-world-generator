@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
+#include <iostream>
 #include <sstream>
 #include "world_map.h"
 

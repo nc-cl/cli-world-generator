@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <math.h>
+#include <algorithm>
 #include "noise_generator.h"
 
 float** NoiseGenerator::_getEmpty2dArray(int width, int height) {

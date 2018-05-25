@@ -1,17 +1,17 @@
-CPPC = g++
+CC = g++
 CFLAGS = -std=c++11 -Wall
-TARGET = generate.cc
-OUTPUT = generate
-OUTPUT_PRE = pre.cc
+DEPENDENCIES = generate.o world_map.o world_map_section.o noise_generator.o
+EXECUTABLE = generate
 
-.PHONY: generate pre clean
+.PHONY: all
+all: $(EXECUTABLE)
 
-generate:
-	@ $(CPPC) $(CFLAGS) $(TARGET) -o $(OUTPUT)
+$(EXECUTABLE): $(DEPENDENCIES)
+	$(CC) $(CFLAGS) -o generate $(DEPENDENCIES)
 
-pre:
-	@ $(CPPC) $(CFLAGS) -E $(TARGET) > $(OUTPUT_PRE) && $(CPPC) $(CFLAGS) $(OUTPUT_PRE) -o $(OUTPUT)
+%.o: %.cc
+	$(CC) $(CFLAGS) -c $^
 
+.PHONY: clean 
 clean:
-	@ rm -f $(OUTPUT) $(OUTPUT).exe $(OUTPUT_PRE)
-
+	rm -fv $(EXECUTABLE) *\.exe *\.o
