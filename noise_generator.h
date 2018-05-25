@@ -1,8 +1,6 @@
 #ifndef NOISE_GENERATOR_H_
 #define NOISE_GENERATOR_H_
 
-using namespace std;
-
 const int DEFAULT_OCTAVES = 4;
 const float DEFAULT_LACUNARITY = 2.0f;
 const float DEFAULT_PERSISTENCE = 0.4f;

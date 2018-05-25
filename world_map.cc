@@ -22,9 +22,9 @@ int WorldMap::getHeight() {
 }
 
 int WorldMap::getDistanceFromOutOfBounds(int x, int y) {
-    int distanceX = min(x + 1, abs(x - _sizeX));
-    int distanceY = min(y + 1, abs(y - _sizeY));
-    return min(distanceX, distanceY);
+    int distanceX = std::min(x + 1, abs(x - _sizeX));
+    int distanceY = std::min(y + 1, abs(y - _sizeY));
+    return std::min(distanceX, distanceY);
 }
 
 void WorldMap::setMapFromNoise(float** height, float** rfall, float** temp) {
@@ -38,15 +38,15 @@ void WorldMap::setMapFromNoise(float** height, float** rfall, float** temp) {
 }
 
 void WorldMap::printMap(bool useColor) {
-    stringstream strstr;
+    std::stringstream ss;
 
     for (int y = _sizeY-1; y > -1; y--) {
         for (int x = 0; x < _sizeX; x++) {
-            strstr << _map[x][y].getBiomeString(useColor);
+            ss << _map[x][y].getBiomeString(useColor);
         }
 
-        strstr << endl;
+        ss << std::endl;
     }
 
-    cout << strstr.str();
+    std::cout << ss.str();
 }

@@ -1,7 +1,7 @@
 #include <string>
 
-#ifndef GEN_MAP_NODE_H_
-#define GEN_MAP_NODE_H_
+#ifndef WORLD_MAP_SECTION_H_
+#define WORLD_MAP_SECTION_H_
 
 const int BIOME_SEA = 0;
 const int BIOME_COAST = 1;
