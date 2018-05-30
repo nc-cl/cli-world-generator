@@ -46,7 +46,7 @@ float** NoiseGenerator::getWhiteNoise(int width, int height) {
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            whiteNoise[i][j] = 0.01f * (std::rand() % 100 + 1);
+            whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
         }
     }
 

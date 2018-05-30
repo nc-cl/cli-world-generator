@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    std::srand(time(NULL));
+    srand(time(NULL));
 
     WorldMap wmap(width, height);
 

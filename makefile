@@ -7,7 +7,7 @@ EXECUTABLE = generate
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(DEPENDENCIES)
-	$(CC) $(CFLAGS) -o generate $(DEPENDENCIES)
+	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(DEPENDENCIES)
 
 %.o: %.cc
 	$(CC) $(CFLAGS) -c $^
