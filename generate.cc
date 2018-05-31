@@ -1,6 +1,8 @@
 #include <string.h>
+#include <iostream>
 #include "world_map.h"
 #include "noise_generator.h"
+#include "gl_window.h"
 
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
@@ -13,6 +15,7 @@ int main(int argc, char* argv[]) {
     int temperature = 50;
 
     bool useColor = true;
+    bool useGui = false;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--width") == 0 || strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "-x") == 0) {
@@ -69,6 +72,8 @@ int main(int argc, char* argv[]) {
             } catch (const std::invalid_argument& e) {}
         } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
             useColor = false;
+        } else if (strcmp(argv[i], "--gui") == 0) {
+            useGui = true;
         }
     }
 
@@ -120,8 +125,21 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    wmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
-    wmap.printMap(useColor);
+    if (useGui) {
+        SDL_Init(SDL_INIT_EVERYTHING);
+        GLWindow window("Map Generator", 600, 400);
+
+        while (window.isOpen()) {
+            window.clear();
+            window.update();
+            window.processEvents();
+        }
+
+        SDL_Quit();
+    } else {
+        wmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
+        wmap.printMap(useColor);
+    }
 
     return 0;
 }
