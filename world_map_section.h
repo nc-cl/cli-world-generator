@@ -21,15 +21,8 @@ class WorldMapSection {
         float _rainfall;
         float _temperature;
     public:
-        WorldMapSection(void) :
-            _height(0.0f),
-            _rainfall(0.0f),
-            _temperature(0.0f) {}
-        WorldMapSection(float height, float rfall, float temp) :
-            _height(height),
-            _rainfall(rfall),
-            _temperature(temp) {}
-
+        WorldMapSection(void);
+        WorldMapSection(float, float, float);
         int getBiome(void);
         std::string getBiomeString(bool);
         void setHeight(float);

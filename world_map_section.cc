@@ -1,5 +1,17 @@
 #include "world_map_section.h"
 
+WorldMapSection::WorldMapSection(void) {
+    _height = 0.0f;
+    _rainfall = 0.0f;
+    _temperature = 0.0f;
+}
+
+WorldMapSection::WorldMapSection(float height, float rfall, float temp) {
+    _height = height;
+    _rainfall = rfall;
+    _temperature = temp;
+}
+
 int WorldMapSection::getBiome() {
     if (_height >= 0.90f) {
         return BIOME_MOUNTAIN_SNOW;

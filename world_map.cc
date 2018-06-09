@@ -5,6 +5,18 @@
 #include <sstream>
 #include "world_map.h"
 
+WorldMap::WorldMap(void) {
+    _sizeX = DEFAULT_SIZE_X;
+    _sizeY = DEFAULT_SIZE_Y;
+    _initMap();
+}
+
+WorldMap::WorldMap(int x, int y) {
+    _sizeX = std::max(x, 0);
+    _sizeY = std::max(y, 0);
+    _initMap();
+}
+
 void WorldMap::_initMap() {
     _map.resize(_sizeX);
 

@@ -14,18 +14,8 @@ class WorldMap {
         std::vector<std::vector<WorldMapSection> > _map;
         void _initMap(void);
     public:
-        WorldMap(void) :
-            _sizeX(DEFAULT_SIZE_X),
-            _sizeY(DEFAULT_SIZE_Y) {
-                _initMap();
-            }
-
-        WorldMap(int x, int y) {
-            _sizeX = std::max(x, 0);
-            _sizeY = std::max(y, 0);
-            _initMap();
-        }
-
+        WorldMap(void);
+        WorldMap(int, int);
         int getWidth(void);
         int getHeight(void);
         int getDistanceFromOutOfBounds(int, int);
