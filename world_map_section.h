@@ -25,6 +25,9 @@ class WorldMapSection {
         WorldMapSection(float, float, float);
         int getBiome(void);
         std::string getBiomeString(bool);
+        float getRainfall(void);
+        float getTemperature(void);
+        float getHeight(void);
         void setHeight(float);
         void setRainfall(float);
         void setTemperature(float);

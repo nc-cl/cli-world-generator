@@ -139,6 +139,18 @@ std::string WorldMapSection::getBiomeString(bool useColor) {
     return biomeChar;
 }
 
+float WorldMapSection::getHeight() {
+    return _height;
+}
+
+float WorldMapSection::getRainfall() {
+    return _rainfall;
+}
+
+float WorldMapSection::getTemperature() {
+    return _temperature;
+}
+
 void WorldMapSection::setHeight(float height) {
     _height = height;
 }

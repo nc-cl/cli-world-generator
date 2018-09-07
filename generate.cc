@@ -1,5 +1,6 @@
 #include <string.h>
 #include <iostream>
+#include <ctime>
 #include "world_map.h"
 #include "noise_generator.h"
 #include "gl_window.h"

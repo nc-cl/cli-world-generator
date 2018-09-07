@@ -8,6 +8,7 @@ float** NoiseGenerator::_getEmpty2dArray(int width, int height) {
 
     for (int i = 0; i < width; i++) {
         arr[i] = new float[height];
+        for (int j = 0; j < height; j++) arr[i][j] = 0.0f;
     }
 
     return arr;
@@ -78,10 +79,7 @@ float** NoiseGenerator::getPerlinNoise(int numOctaves, float lacunarity, float p
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 perlinNoise[i][j] += octaves[o][i][j] * amp;
-
-                if (o == 0) {
-                    perlinNoise[i][j] /= totalAmp;
-                }
+                if (o == 0) perlinNoise[i][j] /= totalAmp;
             }
         }
     }
