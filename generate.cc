@@ -3,7 +3,7 @@
 #include <ctime>
 #include "world_map.h"
 #include "noise_generator.h"
-#include "gl_window.h"
+#include "sdl_window.h"
 
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
@@ -128,7 +128,7 @@ int main(int argc, char* argv[]) {
 
     if (useGui) {
         SDL_Init(SDL_INIT_EVERYTHING);
-        GLWindow window("Map Generator", 600, 400);
+        SDLWindow window("Map Generator", 600, 400);
 
         while (window.isOpen()) {
             window.clear();

@@ -1,6 +1,6 @@
-#include "gl_window.h"
+#include "sdl_window.h"
 
-GLWindow::GLWindow(std::string title, int sizeX, int sizeY) {
+SDLWindow::SDLWindow(std::string title, int sizeX, int sizeY) {
     _window = SDL_CreateWindow(
         title.c_str(),
         SDL_WINDOWPOS_CENTERED,
@@ -15,16 +15,16 @@ GLWindow::GLWindow(std::string title, int sizeX, int sizeY) {
     glewInit();
 }
 
-GLWindow::~GLWindow(void) {
+SDLWindow::~SDLWindow(void) {
     SDL_GL_DeleteContext(_windowContext);
     SDL_DestroyWindow(_window);
 }
 
-void GLWindow::update() {
+void SDLWindow::update() {
     SDL_GL_SwapWindow(_window);
 }
 
-void GLWindow::processEvents() {
+void SDLWindow::processEvents() {
     SDL_Event e;
 
     while (SDL_PollEvent(&e)) {
@@ -34,11 +34,11 @@ void GLWindow::processEvents() {
     }
 }
 
-void GLWindow::clear() {
+void SDLWindow::clear() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-bool GLWindow::isOpen() {
+bool SDLWindow::isOpen() {
     return _isOpen;
 }
