@@ -3,7 +3,13 @@
 #include <ctime>
 #include "world_map.h"
 #include "noise_generator.h"
+
+#if __has_include(<SDL2/SDL.h>)
 #include "sdl_window.h"
+#define SDL_EXISTS 1
+#else
+#define SDL_EXISTS 0
+#endif
 
 int main(int argc, char* argv[]) {
     int width = DEFAULT_SIZE_X;
@@ -74,7 +80,7 @@ int main(int argc, char* argv[]) {
         } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
             useColor = false;
         } else if (strcmp(argv[i], "--gui") == 0) {
-            useGui = true;
+            useGui = SDL_EXISTS;
         }
     }
 
@@ -127,6 +133,8 @@ int main(int argc, char* argv[]) {
     }
 
     if (useGui) {
+        #if SDL_EXISTS
+        std::cout << "ww " << SDL_EXISTS << std::endl;
         SDL_Init(SDL_INIT_EVERYTHING);
         SDLWindow window("Map Generator", 600, 400);
 
@@ -137,6 +145,7 @@ int main(int argc, char* argv[]) {
         }
 
         SDL_Quit();
+        #endif
     } else {
         wmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
         wmap.printMap(useColor);
