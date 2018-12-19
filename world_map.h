@@ -1,6 +1,5 @@
 #include <vector>
 #include <array>
-#include "world_map_section.h"
 
 #ifndef WORLD_MAP_H_
 #define WORLD_MAP_H_
@@ -11,7 +10,7 @@ const int DEFAULT_SIZE_Y = 40;
 class WorldMap {
     private:
         int _sizeX, _sizeY;
-        std::vector<std::vector<WorldMapSection> > _map;
+        std::vector<std::vector<float> > _heightMap;
         void _initMap(void);
     public:
         WorldMap(void);
@@ -19,7 +18,7 @@ class WorldMap {
         int getWidth(void);
         int getHeight(void);
         int getDistanceFromOutOfBounds(int, int);
-        void setMapFromNoise(float**, float**, float**);
+        void setMapFromNoise(float**);
         void printMap(bool);
 };
 

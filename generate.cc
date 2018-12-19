@@ -19,9 +19,7 @@ int main(int argc, char* argv[]) {
     float lacunarity = DEFAULT_LACUNARITY;
     float persistence = DEFAULT_PERSISTENCE;
 
-    int temperature = 50;
-
-    bool useColor = true;
+    bool useColour = true;
     bool useGui = false;
 
     for (int i = 1; i < argc; i++) {
@@ -74,22 +72,20 @@ int main(int argc, char* argv[]) {
             }
         } else if (strcmp(argv[i], "--temperature") == 0 || strcmp(argv[i], "-t") == 0) {
             try {
-                temperature = std::stoi(argv[i+1]);
+                // temporarily removed
+                //temperature = std::stoi(argv[i+1]);
                 i++;
             } catch (const std::invalid_argument& e) {}
-        } else if (strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
-            useColor = false;
+        } else if (strcmp(argv[i], "--no-colour") == 0 || strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
+            useColour = false;
         } else if (strcmp(argv[i], "--gui") == 0) {
-            useGui = SDL_EXISTS;
+            useGui = true;
         }
     }
 
     srand(time(NULL));
 
     WorldMap wmap(width, height);
-
-    temperature = std::max(std::min(temperature, 100), 0);
-    float tempMod = (temperature - 50) / 100.0f * 2;
 
     float** heightNoise = NoiseGenerator::getPerlinNoise(
         octaves,
@@ -98,22 +94,6 @@ int main(int argc, char* argv[]) {
         width,
         height,
         NoiseGenerator::getWhiteNoise(width, height));
-
-    float** rainfallNoise = NoiseGenerator::getPerlinNoise(
-        DEFAULT_OCTAVES,
-        3.0f,
-        DEFAULT_PERSISTENCE,
-        width,
-        height,
-        NoiseGenerator::getWhiteNoise(width,height));
-
-    float** temperatureNoise = NoiseGenerator::getPerlinNoise(
-        DEFAULT_OCTAVES,
-        3.0f,
-        DEFAULT_PERSISTENCE,
-        width,
-        height,
-        NoiseGenerator::getWhiteNoise(width,height));
 
     int maxDistanceFromBorder = std::max(std::min(width, height) / 5, 1);
 
@@ -126,17 +106,13 @@ int main(int argc, char* argv[]) {
             }
 
             heightNoise[x][y] = std::max(heightNoise[x][y], 0.0f);
-
-            temperatureNoise[x][y] += tempMod;
-            temperatureNoise[x][y] = std::max(std::min(temperatureNoise[x][y], 1.0f), 0.0f);
         }
     }
 
     if (useGui) {
         #if SDL_EXISTS
-        std::cout << "ww " << SDL_EXISTS << std::endl;
         SDL_Init(SDL_INIT_EVERYTHING);
-        SDLWindow window("Map Generator", 600, 400);
+        SDLWindow window("Map Generator", 600, 600);
 
         while (window.isOpen()) {
             window.clear();
@@ -145,11 +121,13 @@ int main(int argc, char* argv[]) {
         }
 
         SDL_Quit();
+        #else
+        std::cout << "SDL not found." << std::endl;
         #endif
     } else {
-        wmap.setMapFromNoise(heightNoise, rainfallNoise, temperatureNoise);
-        wmap.printMap(useColor);
+        wmap.setMapFromNoise(heightNoise);
+        wmap.printMap(useColour);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -18,11 +18,8 @@ WorldMap::WorldMap(int x, int y) {
 }
 
 void WorldMap::_initMap() {
-    _map.resize(_sizeX);
-
-    for (int i = 0; i < _sizeX; i++) {
-        _map[i].resize(_sizeY);
-    }
+    _heightMap.resize(_sizeX);
+    for (int i = 0; i < _sizeX; i++) _heightMap[i].resize(_sizeY);
 }
 
 int WorldMap::getWidth() {
@@ -34,31 +31,31 @@ int WorldMap::getHeight() {
 }
 
 int WorldMap::getDistanceFromOutOfBounds(int x, int y) {
-    int distanceX = std::min(x + 1, abs(x - _sizeX));
-    int distanceY = std::min(y + 1, abs(y - _sizeY));
+    int distanceX = std::min(x + 1, std::abs(x - _sizeX)),
+        distanceY = std::min(y + 1, std::abs(y - _sizeY));
     return std::min(distanceX, distanceY);
 }
 
-void WorldMap::setMapFromNoise(float** height, float** rfall, float** temp) {
+void WorldMap::setMapFromNoise(float** height) {
     for (int y = 0; y < _sizeY; y++) {
-        for (int x = 0; x < _sizeX; x++) {
-            _map[x][y].setHeight(height[x][y]);
-            _map[x][y].setRainfall(rfall[x][y]);
-            _map[x][y].setTemperature(temp[x][y]);
-        }
+        for (int x = 0; x < _sizeX; x++) _heightMap[x][y] = height[x][y];
     }
 }
 
-void WorldMap::printMap(bool useColor) {
+void WorldMap::printMap(bool useColour) {
     std::stringstream ss;
 
     for (int y = _sizeY-1; y > -1; y--) {
         for (int x = 0; x < _sizeX; x++) {
-            ss << _map[x][y].getBiomeString(useColor);
+            if (_heightMap[x][y] >= 0.45f) {
+                // bg colour = 233; fg colour = 40
+                ss << (useColour ?  "\033[48;5;233m\033[38;5;40mG\033[0m" : "G");
+            } else {
+                // bg colour = 0; fg colour = 27
+                ss << (useColour ? "\033[48;5;0m\033[38;5;27m~\033[0m" : "~");
+            }
         }
-
         ss << std::endl;
     }
-
     std::cout << ss.str();
 }
