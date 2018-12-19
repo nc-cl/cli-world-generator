@@ -2,11 +2,11 @@ CC = g++
 CFLAGS = -std=c++17 -Werror -Wpedantic
 GLFLAGS = -lSDL2 -lGLEW -lGL
 
-DEPENDENCIES = generate.o world_map.o world_map_section.o noise_generator.o sdl_window.o
-EXECUTABLE = generate
+DEPENDENCIES = main.o world_map.o world_map_section.o noise_generator.o sdl_window.o
+EXECUTABLE = main
 
-DEPENDENCIES_NO_GUI = generate.o world_map.o world_map_section.o noise_generator.o
-EXECUTABLE_NO_GUI  = generate_ngui
+DEPENDENCIES_NO_GUI = main.o world_map.o world_map_section.o noise_generator.o
+EXECUTABLE_NO_GUI  = main_nogui
 
 .PHONY: all
 all: $(EXECUTABLE)

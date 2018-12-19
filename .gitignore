@@ -1,4 +1,16 @@
-generate
-*.exe
+main
+main.exe
 *.o
 *.swp
+*_old*
+
+# windows env
+*.dll
+*.sln
+*.vcxproj
+*.user
+*.filters
+include/
+lib/
+Debug/
+.vs/
