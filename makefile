@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -std=c++17 -Werror -Wpedantic
 GLFLAGS = -lSDL2 -lGLEW -lGL
 
-DEPENDENCIES = main.o world_map.o world_map_section.o noise_generator.o sdl_window.o
+DEPENDENCIES = main.o world_map.o world_map_section.o noise_generator.o window.o
 EXECUTABLE = main
 
 DEPENDENCIES_NO_GUI = main.o world_map.o world_map_section.o noise_generator.o

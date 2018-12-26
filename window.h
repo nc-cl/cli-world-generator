@@ -2,18 +2,18 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-#ifndef SDL_WINDOW_H_
-#define SDL_WINDOW_H_
+#ifndef WINDOW_H_
+#define WINDOW_H_
 
-class SDLWindow {
+class Window {
     private:
-        SDL_Window* _window; 
+        SDL_Window* _window;
         SDL_GLContext _windowContext;
         bool _isOpen;
     public:
-        SDLWindow(void);
-        SDLWindow(std::string, int, int);
-        ~SDLWindow(void);
+        Window(void);
+        Window(std::string, int, int);
+        ~Window(void);
         void update(void);
         void processEvents(void);
         void clear(void);

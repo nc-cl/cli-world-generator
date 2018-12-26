@@ -4,14 +4,17 @@
 #include "world_map.h"
 #include "noise_generator.h"
 
-#if __has_include(<SDL2/SDL.h>)
-#include "sdl_window.h"
-#define SDL_EXISTS 1
+#if __has_include(<SDL2/SDL.h>) && __has_include(<GL/glew.h>) && __has_include(<glm/glm.hpp>)
+#include "window.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#define HAS_3D_DEPENDENCIES 1
 #else
-#define SDL_EXISTS 0
+#define HAS_3D_DEPENDENCIES 0
 #endif
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     int width = DEFAULT_SIZE_X;
     int height = DEFAULT_SIZE_Y;
 
@@ -110,9 +113,9 @@ int main(int argc, char* argv[]) {
     }
 
     if (useGui) {
-        #if SDL_EXISTS
+        #if HAS_3D_DEPENDENCIES
         SDL_Init(SDL_INIT_EVERYTHING);
-        SDLWindow window("Map Generator", 600, 600);
+        Window window;
 
         while (window.isOpen()) {
             window.clear();
