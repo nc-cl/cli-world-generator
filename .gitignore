@@ -3,6 +3,7 @@ main.exe
 *.o
 *.swp
 *_old*
+*.log
 
 # windows env
 *.dll

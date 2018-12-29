@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -8,6 +9,7 @@
 class Window {
     private:
         SDL_Window* _window;
+        SDL_Surface* _windowSurface;
         SDL_GLContext _windowContext;
         bool _isOpen;
     public:

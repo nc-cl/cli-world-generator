@@ -45,7 +45,7 @@ void WorldMap::setMapFromNoise(float** height) {
 void WorldMap::printMap(bool useColour) {
     std::stringstream ss;
 
-    for (int y = _sizeY-1; y > -1; y--) {
+    for (int y = 0; y < _sizeY; y++) {
         for (int x = 0; x < _sizeX; x++) {
             if (_heightMap[x][y] >= 0.45f) {
                 // bg colour = 233; fg colour = 40

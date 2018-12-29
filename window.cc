@@ -1,8 +1,8 @@
 #include "window.h"
 
 const char *DEFAULT_WINDOW_TITLE = "CLI Map Generator";
-const unsigned int DEFAULT_WINDOW_WIDTH = 600;
-const unsigned int DEFAULT_WINDOW_HEIGHT = 600;
+const unsigned int DEFAULT_WINDOW_WIDTH = 800;
+const unsigned int DEFAULT_WINDOW_HEIGHT = 800;
 
 Window::Window(void) {
     _window = SDL_CreateWindow(
@@ -11,9 +11,10 @@ Window::Window(void) {
         SDL_WINDOWPOS_CENTERED,
         DEFAULT_WINDOW_WIDTH,
         DEFAULT_WINDOW_HEIGHT,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+        SDL_WINDOW_OPENGL
     );
 
+    _windowSurface = SDL_GetWindowSurface(_window);
     _windowContext = SDL_GL_CreateContext(_window);
     _isOpen = true;
     glewInit();
@@ -26,9 +27,10 @@ Window::Window(std::string title, int width, int height) {
         SDL_WINDOWPOS_CENTERED,
         width,
         height,
-        SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN
+        SDL_WINDOW_OPENGL
     );
 
+    _windowSurface = SDL_GetWindowSurface(_window);
     _windowContext = SDL_GL_CreateContext(_window);
     _isOpen = true;
     glewInit();
@@ -36,6 +38,7 @@ Window::Window(std::string title, int width, int height) {
 
 Window::~Window(void) {
     SDL_GL_DeleteContext(_windowContext);
+    SDL_FreeSurface(_windowSurface);
     SDL_DestroyWindow(_window);
 }
 
@@ -54,7 +57,7 @@ void Window::processEvents() {
 }
 
 void Window::clear() {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
