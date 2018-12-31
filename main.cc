@@ -1,6 +1,8 @@
 #include <string.h>
 #include <iostream>
 #include <ctime>
+#include <thread>
+#include <chrono>
 #include "world_map.h"
 #include "noise_generator.h"
 
@@ -10,7 +12,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "gl_shader_handler.h"
 #define HAS_3D_DEPENDENCIES 1
+const char *WINDOW_TITLE = "CLI World Generator";
+const unsigned int DEFAULT_WINDOW_SIZE_X = 800;
+const unsigned int DEFAULT_WINDOW_SIZE_Y = 800;
+
 #else
 #define HAS_3D_DEPENDENCIES 0
 #endif
@@ -125,10 +132,10 @@ int main(int argc, char *argv[]) {
             SDL_GLContext context;
         } sdl;
 
-        sdl.window_x = 800;
-        sdl.window_y = 800;
+        sdl.window_x = DEFAULT_WINDOW_SIZE_X;
+        sdl.window_y = DEFAULT_WINDOW_SIZE_Y;
         sdl.window = SDL_CreateWindow(
-            "CLI Map Generator",
+            WINDOW_TITLE,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
             sdl.window_x,
@@ -142,12 +149,11 @@ int main(int argc, char *argv[]) {
         glEnable(GL_PRIMITIVE_RESTART);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
-        glShadeModel(GL_FLAT);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // Vertex generation
-        const unsigned v_width = width + 1, v_height = height + 1;
-
-        const unsigned int num_vertices = v_width * v_height;
+        const unsigned int v_width = width + 1, v_height = height + 1,
+            num_vertices = v_width * v_height;
         std::vector<GLfloat> vertices;
 
         const float vertex_step = 0.2f;
@@ -155,13 +161,13 @@ int main(int argc, char *argv[]) {
             vertices.push_back((i % v_width) * vertex_step);
             vertices.push_back((i / v_width) * vertex_step);
             vertices.push_back(0.0f);
+            vertices.push_back(0.00f);
             vertices.push_back(0.25f);
-            vertices.push_back(0.75f);
-            vertices.push_back(0.05f);
+            vertices.push_back(0.00f);
         }
 
         // Vertex indices
-        const unsigned int num_indices = ((v_width * 2) * height) + height - 1;
+        const unsigned int num_indices = ((v_width * 2) * height) + height;
         std::vector<GLuint> indices;
 
         GLuint restart_i = 0xFFFFFFFF;
@@ -175,12 +181,71 @@ int main(int argc, char *argv[]) {
         }
         glPrimitiveRestartIndex(restart_i);
 
+
+        // Buffer vertex + index data
+        GLuint v_buff, e_buff, vao;
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+
+        glGenBuffers(1, &v_buff);
+        glBindBuffer(GL_ARRAY_BUFFER, v_buff);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+
+        glGenBuffers(1, &e_buff);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e_buff);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (void*)0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (void*)(sizeof(GLfloat) * 3));
+
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+
+        // Shader compilation + linking
+        GlShaderHandler glsh;
+        try {
+            glsh.compileShader(GL_VERTEX_SHADER, "default.vert");
+            glsh.compileShader(GL_FRAGMENT_SHADER, "default.frag");
+            glsh.linkShaders();
+        } catch (const std::string e) {
+            std::cout << e;
+            return EXIT_FAILURE;
+        }
+        GLuint shader = glsh.getProgram();
+
         SDL_Event e;
         bool running = true;
 
+        float x_center = (float)v_width / 2.0f * -vertex_step,
+            y_center = (float)v_height / 2.0f * -vertex_step;
+
         do {
-            glClearColor(0.4f, 0.6f, 0.4f, 1.0f);
+            glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glm::mat4 model(1), view(1), projection(1);
+            // Model matrix
+            model = glm::translate(model, glm::vec3(x_center, y_center, -2.0f));
+
+            // View matrix
+            view = glm::rotate(view, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            view = glm::rotate(view, glm::radians( 45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+            // Projection matrix
+            projection = glm::perspective(glm::radians(80.0f), (float)(sdl.window_x/sdl.window_y), 0.01f, 100.0f);
+
+            glUseProgram(shader);
+            GLint model_l = glGetUniformLocation(shader, "model"),
+                  view_l = glGetUniformLocation(shader, "view"),
+                  projection_l = glGetUniformLocation(shader, "projection");
+            glUniformMatrix4fv(model_l, 1, GL_FALSE, glm::value_ptr(model));
+            glUniformMatrix4fv(view_l, 1, GL_FALSE, glm::value_ptr(view));
+            glUniformMatrix4fv(projection_l, 1, GL_FALSE, glm::value_ptr(projection));
+
+            glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT, 0);
+            glFinish();
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
             SDL_GL_SwapWindow(sdl.window);
 
             while (SDL_PollEvent(&e)) {
@@ -195,6 +260,7 @@ int main(int argc, char *argv[]) {
 
         #else
         std::cout << "SDL not found." << std::endl;
+        return EXIT_FAILURE;
         #endif
     } else {
         wmap.setMapFromNoise(heightNoise);

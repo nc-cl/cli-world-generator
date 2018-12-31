@@ -50,10 +50,10 @@ void GlShaderHandler::compileShader(GLenum sh_type, std::string fpath) {
 }
 
 void GlShaderHandler::linkShaders() {
-	_program = glCreateProgram();
-	glAttachShader(_program, _vertex_sh);
-	glAttachShader(_program, _fragment_sh);
-	glLinkProgram(_program);
+    _program = glCreateProgram();
+    glAttachShader(_program, _vertex_sh);
+    glAttachShader(_program, _fragment_sh);
+    glLinkProgram(_program);
 
     int success;
     glGetProgramiv(_program, GL_LINK_STATUS, &success);
