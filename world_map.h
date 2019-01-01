@@ -20,6 +20,7 @@ class WorldMap {
         int getDistanceFromOutOfBounds(int, int);
         void setMapFromNoise(float**);
         void printMap(bool);
+        float operator()(int, int);
 };
 
 #endif

@@ -12,8 +12,8 @@ WorldMap::WorldMap(void) {
 }
 
 WorldMap::WorldMap(int x, int y) {
-    _sizeX = std::max(x, 0);
-    _sizeY = std::max(y, 0);
+    _sizeX = std::max(x, 1);
+    _sizeY = std::max(y, 1);
     _initMap();
 }
 
@@ -49,13 +49,17 @@ void WorldMap::printMap(bool useColour) {
         for (int x = 0; x < _sizeX; x++) {
             if (_heightMap[x][y] >= 0.45f) {
                 // bg colour = 233; fg colour = 40
-                ss << (useColour ?  "\033[48;5;233m\033[38;5;40mG\033[0m" : "G");
+                ss << (useColour ?  "\033[48;5;233m\033[38;5;40mGG\033[0m" : "GG");
             } else {
                 // bg colour = 0; fg colour = 27
-                ss << (useColour ? "\033[48;5;0m\033[38;5;27m~\033[0m" : "~");
+                ss << (useColour ? "\033[48;5;0m\033[38;5;27m~~\033[0m" : "~~");
             }
         }
         ss << std::endl;
     }
     std::cout << ss.str();
+}
+
+float WorldMap::operator()(int x, int y) {
+    return _heightMap.at(x).at(y);
 }

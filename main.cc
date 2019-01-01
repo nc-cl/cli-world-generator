@@ -120,6 +120,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    wmap.setMapFromNoise(heightNoise);
+    wmap.printMap(useColour);
+
     if (useGui) {
         #if HAS_3D_DEPENDENCIES
         SDL_Init(SDL_INIT_EVERYTHING);
@@ -157,10 +160,37 @@ int main(int argc, char *argv[]) {
         std::vector<GLfloat> vertices;
 
         const float vertex_step = 0.2f;
+
+        float z_avg;
+        bool at_n_bound, at_e_bound, at_s_bound, at_w_bound;
+        int prev_x, next_x, prev_y, next_y;
+
         for (int i = 0; i < num_vertices; i++) {
-            vertices.push_back((i % v_width) * vertex_step);
-            vertices.push_back((i / v_width) * vertex_step);
-            vertices.push_back(0.0f);
+            // XY values
+            vertices.push_back((i % v_width) *  vertex_step);
+            vertices.push_back((i / v_width) * -vertex_step);
+
+            // Z value
+            z_avg = 0.0f;
+
+            at_n_bound = i / v_height == 0;
+            at_e_bound = i % v_width  == v_width  - 1;
+            at_s_bound = i / v_height == v_height - 1;
+            at_w_bound = i % v_width  == 0;
+
+            prev_x = i % v_width - 1;
+            next_x = i % v_width;
+            prev_y = i / v_width - 1;
+            next_y = i / v_width;
+
+            z_avg += (at_n_bound || at_w_bound) ? 0.5f : wmap(prev_x, prev_y);
+            z_avg += (at_n_bound || at_e_bound) ? 0.5f : wmap(next_x, prev_y);
+            z_avg += (at_s_bound || at_w_bound) ? 0.5f : wmap(prev_x, next_y);
+            z_avg += (at_s_bound || at_e_bound) ? 0.5f : wmap(next_x, next_y);
+            z_avg /= 4.0f;
+            vertices.push_back(z_avg);
+
+            // RGB values
             vertices.push_back(0.00f);
             vertices.push_back(0.25f);
             vertices.push_back(0.00f);
@@ -217,13 +247,14 @@ int main(int argc, char *argv[]) {
         bool running = true;
 
         float x_center = (float)v_width / 2.0f * -vertex_step,
-            y_center = (float)v_height / 2.0f * -vertex_step;
+            y_center = (float)v_height / 2.0f * vertex_step;
 
         do {
             glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glm::mat4 model(1), view(1), projection(1);
+
             // Model matrix
             model = glm::translate(model, glm::vec3(x_center, y_center, -2.0f));
 
@@ -232,7 +263,7 @@ int main(int argc, char *argv[]) {
             view = glm::rotate(view, glm::radians( 45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             // Projection matrix
-            projection = glm::perspective(glm::radians(80.0f), (float)(sdl.window_x/sdl.window_y), 0.01f, 100.0f);
+            projection = glm::perspective(glm::radians(120.0f), (float)(sdl.window_x / sdl.window_y), 0.01f, 100.0f);
 
             glUseProgram(shader);
             GLint model_l = glGetUniformLocation(shader, "model"),
@@ -262,9 +293,6 @@ int main(int argc, char *argv[]) {
         std::cout << "SDL not found." << std::endl;
         return EXIT_FAILURE;
         #endif
-    } else {
-        wmap.setMapFromNoise(heightNoise);
-        wmap.printMap(useColour);
     }
 
     return EXIT_SUCCESS;
