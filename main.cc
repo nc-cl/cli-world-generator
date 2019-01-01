@@ -161,7 +161,7 @@ int main(int argc, char *argv[]) {
 
         const float vertex_step = 0.2f;
 
-        float z_avg;
+        float z_avg, z_avg_divisor;
         bool at_n_bound, at_e_bound, at_s_bound, at_w_bound;
         int prev_x, next_x, prev_y, next_y;
 
@@ -172,22 +172,36 @@ int main(int argc, char *argv[]) {
 
             // Z value
             z_avg = 0.0f;
+            z_avg_divisor = 0.0f;
 
-            at_n_bound = i / v_height == 0;
-            at_e_bound = i % v_width  == v_width  - 1;
-            at_s_bound = i / v_height == v_height - 1;
-            at_w_bound = i % v_width  == 0;
+            at_n_bound = i / v_width == 0;
+            at_e_bound = i % v_width == v_width  - 1;
+            at_s_bound = i / v_width == v_height - 1;
+            at_w_bound = i % v_width == 0;
 
             prev_x = i % v_width - 1;
             next_x = i % v_width;
             prev_y = i / v_width - 1;
             next_y = i / v_width;
 
-            z_avg += (at_n_bound || at_w_bound) ? 0.5f : wmap(prev_x, prev_y);
-            z_avg += (at_n_bound || at_e_bound) ? 0.5f : wmap(next_x, prev_y);
-            z_avg += (at_s_bound || at_w_bound) ? 0.5f : wmap(prev_x, next_y);
-            z_avg += (at_s_bound || at_e_bound) ? 0.5f : wmap(next_x, next_y);
-            z_avg /= 4.0f;
+            if (!at_n_bound && !at_w_bound) {
+                z_avg += wmap(prev_x, prev_y);
+                z_avg_divisor += 1.0f;
+            }
+            if (!at_n_bound && !at_e_bound) {
+                z_avg += wmap(next_x, prev_y);
+                z_avg_divisor += 1.0f;
+            }
+            if (!at_s_bound && !at_w_bound) {
+                z_avg += wmap(prev_x, next_y);
+                z_avg_divisor += 1.0f;
+            }
+            if (!at_s_bound && !at_e_bound) {
+                z_avg += wmap(next_x, next_y);
+                z_avg_divisor += 1.0f;
+            }
+
+            z_avg /= z_avg_divisor;
             vertices.push_back(z_avg);
 
             // RGB values
@@ -210,7 +224,6 @@ int main(int argc, char *argv[]) {
             }
         }
         glPrimitiveRestartIndex(restart_i);
-
 
         // Buffer vertex + index data
         GLuint v_buff, e_buff, vao;
@@ -263,7 +276,7 @@ int main(int argc, char *argv[]) {
             view = glm::rotate(view, glm::radians( 45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             // Projection matrix
-            projection = glm::perspective(glm::radians(120.0f), (float)(sdl.window_x / sdl.window_y), 0.01f, 100.0f);
+            projection = glm::perspective(glm::radians(100.0f), (float)(sdl.window_x / sdl.window_y), 0.01f, 100.0f);
 
             glUseProgram(shader);
             GLint model_l = glGetUniformLocation(shader, "model"),
