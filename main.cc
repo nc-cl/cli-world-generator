@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     bool useColour = true;
     bool useGui = false;
+    bool use_wireframe_mode = false;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--width") == 0 || strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "-x") == 0) {
@@ -91,6 +92,8 @@ int main(int argc, char *argv[]) {
             useColour = false;
         } else if (strcmp(argv[i], "--gui") == 0) {
             useGui = true;
+        } else if (strcmp(argv[i], "-f") == 0) {
+            use_wireframe_mode = true;
         }
     }
 
@@ -152,7 +155,10 @@ int main(int argc, char *argv[]) {
         glEnable(GL_PRIMITIVE_RESTART);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        if (use_wireframe_mode) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
 
         // Vertex generation
         const unsigned int v_width = width + 1, v_height = height + 1,
@@ -256,7 +262,7 @@ int main(int argc, char *argv[]) {
             y_center = (float)v_height / 2.0f * vertex_step;
 
         do {
-            glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+            glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glm::mat4 model(1), view(1), projection(1);
