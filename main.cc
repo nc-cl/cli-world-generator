@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
         glEnable(GL_PRIMITIVE_RESTART);
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // Vertex generation
         const unsigned int v_width = width + 1, v_height = height + 1,
@@ -202,12 +202,7 @@ int main(int argc, char *argv[]) {
             }
 
             z_avg /= z_avg_divisor;
-            vertices.push_back(z_avg);
-
-            // RGB values
-            vertices.push_back(0.00f);
-            vertices.push_back(0.25f);
-            vertices.push_back(0.00f);
+            vertices.push_back(z_avg * 2.0f - 1.0f);
         }
 
         // Vertex indices
@@ -226,23 +221,21 @@ int main(int argc, char *argv[]) {
         glPrimitiveRestartIndex(restart_i);
 
         // Buffer vertex + index data
-        GLuint v_buff, e_buff, vao;
+        GLuint vao, vbo, ebo;
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
 
-        glGenBuffers(1, &v_buff);
-        glBindBuffer(GL_ARRAY_BUFFER, v_buff);
+        glGenBuffers(1, &vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
 
-        glGenBuffers(1, &e_buff);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, e_buff);
+        glGenBuffers(1, &ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (void*)0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 6, (void*)(sizeof(GLfloat) * 3));
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (void*)0);
 
         glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
 
         // Shader compilation + linking
         GlShaderHandler glsh;
@@ -273,7 +266,7 @@ int main(int argc, char *argv[]) {
 
             // View matrix
             view = glm::rotate(view, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-            view = glm::rotate(view, glm::radians( 45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+            view = glm::rotate(view, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             // Projection matrix
             projection = glm::perspective(glm::radians(100.0f), (float)(sdl.window_x / sdl.window_y), 0.01f, 100.0f);
