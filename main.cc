@@ -13,6 +13,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "gl_shader_handler.h"
+#include "world_map_mesh.h"
 #define HAS_3D_DEPENDENCIES 1
 const char *WINDOW_TITLE = "CLI World Generator";
 const unsigned int DEFAULT_WINDOW_SIZE_X = 800;
@@ -160,88 +161,7 @@ int main(int argc, char *argv[]) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        // Vertex generation
-        const unsigned int v_width = width + 1, v_height = height + 1,
-            num_vertices = v_width * v_height;
-        std::vector<GLfloat> vertices;
-
-        const float vertex_step = 0.2f;
-
-        float z_avg, z_avg_divisor;
-        bool at_n_bound, at_e_bound, at_s_bound, at_w_bound;
-        int prev_x, next_x, prev_y, next_y;
-
-        for (int i = 0; i < num_vertices; i++) {
-            // XY values
-            vertices.push_back((i % v_width) *  vertex_step);
-            vertices.push_back((i / v_width) * -vertex_step);
-
-            // Z value
-            z_avg = 0.0f;
-            z_avg_divisor = 0.0f;
-
-            at_n_bound = i / v_width == 0;
-            at_e_bound = i % v_width == v_width  - 1;
-            at_s_bound = i / v_width == v_height - 1;
-            at_w_bound = i % v_width == 0;
-
-            prev_x = i % v_width - 1;
-            next_x = i % v_width;
-            prev_y = i / v_width - 1;
-            next_y = i / v_width;
-
-            if (!at_n_bound && !at_w_bound) {
-                z_avg += wmap(prev_x, prev_y);
-                z_avg_divisor += 1.0f;
-            }
-            if (!at_n_bound && !at_e_bound) {
-                z_avg += wmap(next_x, prev_y);
-                z_avg_divisor += 1.0f;
-            }
-            if (!at_s_bound && !at_w_bound) {
-                z_avg += wmap(prev_x, next_y);
-                z_avg_divisor += 1.0f;
-            }
-            if (!at_s_bound && !at_e_bound) {
-                z_avg += wmap(next_x, next_y);
-                z_avg_divisor += 1.0f;
-            }
-
-            z_avg /= z_avg_divisor;
-            vertices.push_back(z_avg * 2.0f - 1.0f);
-        }
-
-        // Vertex indices
-        const unsigned int num_indices = ((v_width * 2) * height) + height;
-        std::vector<GLuint> indices;
-
-        GLuint restart_i = 0xFFFFFFFF;
-        for (int i = 0; indices.size() < num_indices; i++) {
-            indices.push_back(i);
-            indices.push_back(i + v_width);
-
-            if ((i + 1) % v_width == 0) {
-                indices.push_back(restart_i);
-            }
-        }
-        glPrimitiveRestartIndex(restart_i);
-
-        // Buffer vertex + index data
-        GLuint vao, vbo, ebo;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
-
-        glGenBuffers(1, &ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (void*)0);
-
-        glEnableVertexAttribArray(0);
+        WorldMapMesh wmap_mesh(&wmap);
 
         // Shader compilation + linking
         GlShaderHandler glsh;
@@ -250,7 +170,7 @@ int main(int argc, char *argv[]) {
             glsh.compileShader(GL_FRAGMENT_SHADER, "default.frag");
             glsh.linkShaders();
         } catch (const std::string e) {
-            std::cout << e;
+            std::cerr << e;
             return EXIT_FAILURE;
         }
         GLuint shader = glsh.getProgram();
@@ -258,8 +178,8 @@ int main(int argc, char *argv[]) {
         SDL_Event e;
         bool running = true;
 
-        float x_center = (float)v_width / 2.0f * -vertex_step,
-            y_center = (float)v_height / 2.0f * vertex_step;
+        float x_center = ((float)width) / 2.0f * -0.2f,
+            y_center = ((float)height) / 2.0f * 0.2f;
 
         do {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -285,8 +205,7 @@ int main(int argc, char *argv[]) {
             glUniformMatrix4fv(view_l, 1, GL_FALSE, glm::value_ptr(view));
             glUniformMatrix4fv(projection_l, 1, GL_FALSE, glm::value_ptr(projection));
 
-            glDrawElements(GL_TRIANGLE_STRIP, num_indices, GL_UNSIGNED_INT, 0);
-            glFinish();
+            wmap_mesh.draw();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             SDL_GL_SwapWindow(sdl.window);
@@ -302,7 +221,7 @@ int main(int argc, char *argv[]) {
         SDL_Quit();
 
         #else
-        std::cout << "SDL not found." << std::endl;
+        std::cerr << "Missing 3D dependencies." << std::endl;
         return EXIT_FAILURE;
         #endif
     }
