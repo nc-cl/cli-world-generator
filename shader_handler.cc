@@ -2,13 +2,13 @@
 #include <streambuf>
 #include <sstream>
 #include <iostream>
-#include "gl_shader_handler.h"
+#include "shader_handler.h"
 
 const std::string SHADER_DIR = "";
 
-GlShaderHandler::GlShaderHandler(void) {}
+ShaderHandler::ShaderHandler(void) {}
 
-GlShaderHandler::~GlShaderHandler() {
+ShaderHandler::~ShaderHandler() {
     glDetachShader(_program, _vertex_sh);
     glDetachShader(_program, _fragment_sh);
     glDeleteShader(_vertex_sh);
@@ -16,7 +16,7 @@ GlShaderHandler::~GlShaderHandler() {
     glDeleteProgram(_program);
 }
 
-void GlShaderHandler::compileShader(GLenum sh_type, std::string fpath) {
+void ShaderHandler::compileShader(GLenum sh_type, std::string fpath) {
     std::ifstream infile(SHADER_DIR + fpath);
     std::string src_str = std::string(std::istreambuf_iterator<char>(infile),
         std::istreambuf_iterator<char>());
@@ -49,7 +49,7 @@ void GlShaderHandler::compileShader(GLenum sh_type, std::string fpath) {
     }
 }
 
-void GlShaderHandler::linkShaders() {
+void ShaderHandler::linkShaders() {
     _program = glCreateProgram();
     glAttachShader(_program, _vertex_sh);
     glAttachShader(_program, _fragment_sh);
@@ -67,6 +67,6 @@ void GlShaderHandler::linkShaders() {
 	}
 }
 
-GLuint GlShaderHandler::getProgram() {
+GLuint ShaderHandler::getProgram() {
     return _program;
 }

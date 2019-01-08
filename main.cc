@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "gl_shader_handler.h"
+#include "shader_handler.h"
 #include "world_map_mesh.h"
 #define HAS_3D_DEPENDENCIES 1
 const char *WINDOW_TITLE = "CLI World Generator";
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
         WorldMapMesh wmap_mesh(&wmap);
 
         // Shader compilation + linking
-        GlShaderHandler glsh;
+        ShaderHandler glsh;
         try {
             glsh.compileShader(GL_VERTEX_SHADER, "default.vert");
             glsh.compileShader(GL_FRAGMENT_SHADER, "default.frag");
