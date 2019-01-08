@@ -4,7 +4,7 @@
 #include <iostream>
 #include "shader_handler.h"
 
-const std::string SHADER_DIR = "";
+const std::string SHADER_DIR = "shader/";
 
 ShaderHandler::ShaderHandler(void) {}
 
