@@ -1,8 +1,8 @@
-#include <vector>
-#include <array>
-
 #ifndef WORLD_MAP_H_
 #define WORLD_MAP_H_
+
+#include <vector>
+#include <array>
 
 const int DEFAULT_SIZE_X = 120;
 const int DEFAULT_SIZE_Y = 40;

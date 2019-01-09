@@ -14,6 +14,5 @@ void main () {
         0.1,
         normal_z,
         max(0.1, 0.75 - normal_z),
-        1.0
-    );
+        1.0);
 }

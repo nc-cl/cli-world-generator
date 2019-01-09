@@ -57,14 +57,14 @@ void ShaderHandler::linkShaders() {
 
     int success;
     glGetProgramiv(_program, GL_LINK_STATUS, &success);
-	if (!success) {
+    if (!success) {
         char info_log[512];
-		glGetShaderInfoLog(_program, 512, NULL, info_log);
+        glGetShaderInfoLog(_program, 512, NULL, info_log);
 
         std::stringstream ss;
-		ss << "shader linking failed\n\nlog:\n" << info_log << std::endl;
+        ss << "shader linking failed\n\nlog:\n" << info_log << std::endl;
         throw ss.str();
-	}
+    }
 }
 
 GLuint ShaderHandler::getProgram() {

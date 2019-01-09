@@ -1,7 +1,7 @@
-#include <GL/glew.h>
-
 #ifndef SHADER_HANDLER_H_
 #define SHADER_HANDLER_H_
+
+#include <GL/glew.h>
 
 class ShaderHandler {
     private:

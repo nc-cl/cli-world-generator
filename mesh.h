@@ -1,3 +1,6 @@
+#ifndef MESH_H_
+#define MESH_H_
+
 #include <GL/glew.h>
 #include <vector>
 
@@ -11,3 +14,5 @@ class Mesh {
     public:
         virtual void draw() = 0;
 };
+
+#endif
