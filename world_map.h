@@ -15,12 +15,12 @@ class WorldMap {
     public:
         WorldMap(void);
         WorldMap(int, int);
-        int getWidth(void);
-        int getHeight(void);
+        int getWidth(void) const;
+        int getHeight(void) const;
         int getDistanceFromOutOfBounds(int, int);
         void setMapFromNoise(float**);
         void printMap(bool);
-        float operator()(int, int);
+        float operator()(int, int) const;
 };
 
 #endif

@@ -22,11 +22,11 @@ void WorldMap::_initMap() {
     for (int i = 0; i < _sizeX; i++) _heightMap[i].resize(_sizeY);
 }
 
-int WorldMap::getWidth() {
+int WorldMap::getWidth() const {
     return _sizeX;
 }
 
-int WorldMap::getHeight() {
+int WorldMap::getHeight() const {
     return _sizeY;
 }
 
@@ -60,6 +60,6 @@ void WorldMap::printMap(bool useColour) {
     std::cout << ss.str();
 }
 
-float WorldMap::operator()(int x, int y) {
+float WorldMap::operator()(int x, int y) const {
     return _heightMap.at(x).at(y);
 }

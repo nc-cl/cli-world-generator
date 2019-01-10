@@ -1,13 +1,10 @@
 #include "world_map_mesh.h"
 
-WorldMapMesh::WorldMapMesh(WorldMap *wmap) {
-    _wmap = wmap;
-    unsigned int width = _wmap->getWidth(),
-        height = _wmap->getHeight();
-
+WorldMapMesh::WorldMapMesh(const WorldMap *wmap) {
     // Vertex generation
-    const unsigned int v_width = width + 1, v_height = height + 1,
-          num_vertices = v_width * v_height;
+    const unsigned int width = wmap->getWidth(), height = wmap->getHeight(),
+        v_width = width + 1, v_height = height + 1,
+        num_vertices = v_width * v_height;
 
     float vertex_step = 0.2f;
 
@@ -35,19 +32,19 @@ WorldMapMesh::WorldMapMesh(WorldMap *wmap) {
         next_y = i / v_width;
 
         if (!at_n_bound && !at_w_bound) {
-            z_avg += (*_wmap)(prev_x, prev_y);
+            z_avg += (*wmap)(prev_x, prev_y);
             z_avg_divisor += 1.0f;
         }
         if (!at_n_bound && !at_e_bound) {
-            z_avg += (*_wmap)(next_x, prev_y);
+            z_avg += (*wmap)(next_x, prev_y);
             z_avg_divisor += 1.0f;
         }
         if (!at_s_bound && !at_w_bound) {
-            z_avg += (*_wmap)(prev_x, next_y);
+            z_avg += (*wmap)(prev_x, next_y);
             z_avg_divisor += 1.0f;
         }
         if (!at_s_bound && !at_e_bound) {
-            z_avg += (*_wmap)(next_x, next_y);
+            z_avg += (*wmap)(next_x, next_y);
             z_avg_divisor += 1.0f;
         }
 
@@ -78,7 +75,7 @@ WorldMapMesh::WorldMapMesh(WorldMap *wmap) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(GLuint), &_indices[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 3, nullptr);
 
     glEnableVertexAttribArray(0);
 

@@ -1,4 +1,3 @@
-#include <string.h>
 #include <iostream>
 #include <ctime>
 #include <thread>
@@ -161,7 +160,7 @@ int main(int argc, char *argv[]) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        WorldMapMesh wmap_mesh(&wmap);
+        WorldMapMesh wmap_mesh(const_cast<WorldMap*>(&wmap));
 
         // Shader compilation + linking
         ShaderHandler glsh;
