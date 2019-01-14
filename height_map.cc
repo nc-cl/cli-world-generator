@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <sstream>
-#include "world_map.h"
+#include "height_map.h"
 
 HeightMap::HeightMap(int x, int y) {
     _size_x = std::max(x, 1);

@@ -2,10 +2,10 @@ CC = g++
 CFLAGS = -std=c++17 -Werror -Wpedantic
 GLFLAGS = -lSDL2 -lGLEW -lGL
 
-DEPENDENCIES = main.o world_map.o noise_generator.o shader_handler.o world_map_mesh.o
+DEPENDENCIES = main.o height_map.o noise_generator.o shader_handler.o height_map_mesh.o
 EXECUTABLE = main
 
-DEPENDENCIES_NO_GUI = main.o world_map.o noise_generator.o
+DEPENDENCIES_NO_GUI = main.o height_map.o noise_generator.o
 EXECUTABLE_NO_GUI  = main_nogui
 
 .PHONY: all

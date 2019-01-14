@@ -2,7 +2,7 @@
 #include <ctime>
 #include <thread>
 #include <chrono>
-#include "world_map.h"
+#include "height_map.h"
 #include "noise_generator.h"
 
 #if __has_include(<SDL2/SDL.h>) && __has_include(<GL/glew.h>) && __has_include(<glm/glm.hpp>)
@@ -12,7 +12,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "shader_handler.h"
-#include "world_map_mesh.h"
+#include "height_map_mesh.h"
 #define HAS_3D_DEPENDENCIES 1
 const char *WINDOW_TITLE = "CLI World Generator";
 const unsigned int DEFAULT_WINDOW_SIZE_X = 800;

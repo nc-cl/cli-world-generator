@@ -1,4 +1,4 @@
-#include "world_map_mesh.h"
+#include "height_map_mesh.h"
 
 HeightMapMesh::HeightMapMesh(const HeightMap *hmap) {
     // Vertex generation

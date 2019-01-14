@@ -2,7 +2,7 @@
 #define WORLD_MAP_MESH_H_
 
 #include "mesh.h"
-#include "world_map.h"
+#include "height_map.h"
 
 class HeightMapMesh : public Mesh {
     public:
