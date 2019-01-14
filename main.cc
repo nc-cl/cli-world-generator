@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-    WorldMap wmap(width, height);
+    HeightMap hmap(width, height);
 
     float** heightNoise = NoiseGenerator::getPerlinNoise(
         octaves,
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            int distanceFromBorder = wmap.getDistanceFromOutOfBounds(x, y);
+            int distanceFromBorder = hmap.getDistanceFromOutOfBounds(x, y);
 
             if (distanceFromBorder <= max_border_dist) {
                 heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * std::abs(distanceFromBorder - (max_border_dist + 1));
@@ -123,8 +123,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    wmap.setMapFromNoise(heightNoise);
-    wmap.printMap(use_colour);
+    hmap.setHeights(heightNoise);
+    hmap.printMap(use_colour);
 
     if (use_gui) {
         #if HAS_3D_DEPENDENCIES
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Create mesh from map data
-        WorldMapMesh wmap_mesh(const_cast<WorldMap*>(&wmap));
+        HeightMapMesh hmap_mesh(const_cast<HeightMap*>(&hmap));
 
         // Shader compilation + linking
         ShaderHandler glsh;
@@ -208,7 +208,7 @@ int main(int argc, char *argv[]) {
             glUniformMatrix4fv(view_l, 1, GL_FALSE, glm::value_ptr(view));
             glUniformMatrix4fv(projection_l, 1, GL_FALSE, glm::value_ptr(projection));
 
-            wmap_mesh.draw();
+            hmap_mesh.draw();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
             SDL_GL_SwapWindow(sdl_state.window);

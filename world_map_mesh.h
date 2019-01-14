@@ -4,9 +4,9 @@
 #include "mesh.h"
 #include "world_map.h"
 
-class WorldMapMesh : public Mesh {
+class HeightMapMesh : public Mesh {
     public:
-        WorldMapMesh(const WorldMap *wmap);
+        HeightMapMesh (const HeightMap *hmap);
         void draw(void);
 };
 

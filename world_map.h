@@ -4,21 +4,20 @@
 #include <vector>
 #include <array>
 
-const int DEFAULT_SIZE_X = 120;
-const int DEFAULT_SIZE_Y = 40;
+const int DEFAULT_SIZE_X = 100;
+const int DEFAULT_SIZE_Y = 100;
 
-class WorldMap {
+class HeightMap {
     private:
-        int _width, _height;
-        std::vector<std::vector<float> > _hmap;
-        void _initMap(void);
+        int _size_x;
+        int _size_y;
+        std::vector<std::vector<float> > _heights;
     public:
-        WorldMap(void);
-        WorldMap(int, int);
-        int getWidth(void) const;
-        int getHeight(void) const;
+        HeightMap(int, int);
+        int getSizeX(void) const;
+        int getSizeY(void) const;
         int getDistanceFromOutOfBounds(int, int);
-        void setMapFromNoise(float**);
+        void setHeights(float**);
         void printMap(bool);
         float operator()(int, int) const;
 };
