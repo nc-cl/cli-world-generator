@@ -14,9 +14,9 @@ float** NoiseGenerator::_getEmpty2dArray(int width, int height) {
     return arr;
 }
 
-float** NoiseGenerator::_getOctave(float** noise, int octaveNumber, float lacunarity, int width, int height) {
+float** NoiseGenerator::_getOctave(float** noise, int octave_no, float lacunarity, int width, int height) {
     float** octave = NoiseGenerator::_getEmpty2dArray(width, height);
-    int wlen = std::pow(lacunarity, octaveNumber);
+    int wlen = std::pow(lacunarity, octave_no);
     float freq = 1.0f / wlen;
 
     for (int i = 0; i < width; i++) {
@@ -39,38 +39,38 @@ float** NoiseGenerator::_getOctave(float** noise, int octaveNumber, float lacuna
 }
 
 float NoiseGenerator::_lerp(float val1, float val2, float alpha) {
-    return (1 - alpha)*val1 + alpha*val2;
+    return (1 - alpha) * val1 + alpha * val2;
 }
 
 float** NoiseGenerator::getWhiteNoise(int width, int height) {
-    float** whiteNoise = NoiseGenerator::_getEmpty2dArray(width, height);
+    float** noise = NoiseGenerator::_getEmpty2dArray(width, height);
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < height; j++) {
-            whiteNoise[i][j] = 0.01f * (rand() % 100 + 1);
+            noise[i][j] = 0.01f * (rand() % 100 + 1);
         }
     }
 
-    return whiteNoise;
+    return noise;
 }
 
-float** NoiseGenerator::getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height) {
-    float** whiteNoise = NoiseGenerator::getWhiteNoise(width, height);
-    return NoiseGenerator::getPerlinNoise(numOctaves, lacunarity, persistence, width, height, whiteNoise);
+float** NoiseGenerator::getPerlinNoise(int num_octaves, float lacunarity, float persistence, int width, int height) {
+    float** noise = NoiseGenerator::getWhiteNoise(width, height);
+    return NoiseGenerator::getPerlinNoise(num_octaves, lacunarity, persistence, width, height, noise);
 }
 
-float** NoiseGenerator::getPerlinNoise(int numOctaves, float lacunarity, float persistence, int width, int height, float** noise) {
-    numOctaves = std::max(numOctaves, 0);
+float** NoiseGenerator::getPerlinNoise(int num_octaves, float lacunarity, float persistence, int width, int height, float** noise) {
+    num_octaves = std::max(num_octaves, 0);
     lacunarity = std::max(lacunarity, 1.0f);
     persistence = std::max(persistence, 0.01f);
 
-    float** perlinNoise = NoiseGenerator::_getEmpty2dArray(width, height);
-    float*** octaves = new float**[numOctaves];
+    float** pnoise = NoiseGenerator::_getEmpty2dArray(width, height);
+    float*** octaves = new float**[num_octaves];
 
     float amp = 1.0f;
     float totalAmp = 0.0f;
 
-    for (int o = numOctaves-1; o >= 0; o--) {
+    for (int o = num_octaves - 1; o >= 0; o--) {
         octaves[o] = NoiseGenerator::_getOctave(noise, o, lacunarity, width, height);
 
         amp *= persistence;
@@ -78,11 +78,11 @@ float** NoiseGenerator::getPerlinNoise(int numOctaves, float lacunarity, float p
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                perlinNoise[i][j] += octaves[o][i][j] * amp;
-                if (o == 0) perlinNoise[i][j] /= totalAmp;
+                pnoise[i][j] += octaves[o][i][j] * amp;
+                if (o == 0) pnoise[i][j] /= totalAmp;
             }
         }
     }
 
-    return perlinNoise;
+    return pnoise;
 }

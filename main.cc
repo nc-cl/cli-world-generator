@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
     float lacunarity = DEFAULT_LACUNARITY;
     float persistence = DEFAULT_PERSISTENCE;
 
-    bool useColour = true;
-    bool useGui = false;
+    bool use_colour = true;
+    bool use_gui = false;
     bool use_wireframe_mode = false;
 
     for (int i = 1; i < argc; i++) {
@@ -89,9 +89,9 @@ int main(int argc, char *argv[]) {
                 i++;
             } catch (const std::invalid_argument& e) {}
         } else if (strcmp(argv[i], "--no-colour") == 0 || strcmp(argv[i], "--no-color") == 0 || strcmp(argv[i], "-nc") == 0) {
-            useColour = false;
+            use_colour = false;
         } else if (strcmp(argv[i], "--gui") == 0) {
-            useGui = true;
+            use_gui = true;
         } else if (strcmp(argv[i], "-f") == 0) {
             use_wireframe_mode = true;
         }
@@ -109,14 +109,14 @@ int main(int argc, char *argv[]) {
         height,
         NoiseGenerator::getWhiteNoise(width, height));
 
-    int maxDistanceFromBorder = std::max(std::min(width, height) / 5, 1);
+    int max_border_dist = std::max(std::min(width, height) / 5, 1);
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             int distanceFromBorder = wmap.getDistanceFromOutOfBounds(x, y);
 
-            if (distanceFromBorder <= maxDistanceFromBorder) {
-                heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * std::abs(distanceFromBorder - (maxDistanceFromBorder + 1));
+            if (distanceFromBorder <= max_border_dist) {
+                heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * std::abs(distanceFromBorder - (max_border_dist + 1));
             }
 
             heightNoise[x][y] = std::max(heightNoise[x][y], 0.0f);
@@ -124,9 +124,9 @@ int main(int argc, char *argv[]) {
     }
 
     wmap.setMapFromNoise(heightNoise);
-    wmap.printMap(useColour);
+    wmap.printMap(use_colour);
 
-    if (useGui) {
+    if (use_gui) {
         #if HAS_3D_DEPENDENCIES
         SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -136,19 +136,19 @@ int main(int argc, char *argv[]) {
             SDL_Window* window;
             SDL_Surface* surface;
             SDL_GLContext context;
-        } sdl;
+        } sdl_state;
 
-        sdl.window_x = DEFAULT_WINDOW_SIZE_X;
-        sdl.window_y = DEFAULT_WINDOW_SIZE_Y;
-        sdl.window = SDL_CreateWindow(
+        sdl_state.window_x = DEFAULT_WINDOW_SIZE_X;
+        sdl_state.window_y = DEFAULT_WINDOW_SIZE_Y;
+        sdl_state.window = SDL_CreateWindow(
             WINDOW_TITLE,
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            sdl.window_x,
-            sdl.window_y,
+            sdl_state.window_x,
+            sdl_state.window_y,
             SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
-        sdl.surface = SDL_GetWindowSurface(sdl.window);
-        sdl.context = SDL_GL_CreateContext(sdl.window);
+        sdl_state.surface = SDL_GetWindowSurface(sdl_state.window);
+        sdl_state.context = SDL_GL_CreateContext(sdl_state.window);
         glewInit();
 
         // GL settings
@@ -158,8 +158,12 @@ int main(int argc, char *argv[]) {
 
         if (use_wireframe_mode) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
         }
 
+        // Create mesh from map data
         WorldMapMesh wmap_mesh(const_cast<WorldMap*>(&wmap));
 
         // Shader compilation + linking
@@ -190,11 +194,11 @@ int main(int argc, char *argv[]) {
             model = glm::translate(model, glm::vec3(x_center, y_center, -2.0f));
 
             // View matrix
-            view = glm::rotate(view, glm::radians(-30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            view = glm::rotate(view, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             view = glm::rotate(view, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             // Projection matrix
-            projection = glm::perspective(glm::radians(100.0f), (float)(sdl.window_x / sdl.window_y), 0.01f, 100.0f);
+            projection = glm::perspective(glm::radians(100.0f), (float)(sdl_state.window_x / sdl_state.window_y), 0.01f, 100.0f);
 
             glUseProgram(shader);
             GLint model_l = glGetUniformLocation(shader, "model"),
@@ -207,16 +211,16 @@ int main(int argc, char *argv[]) {
             wmap_mesh.draw();
 
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            SDL_GL_SwapWindow(sdl.window);
+            SDL_GL_SwapWindow(sdl_state.window);
 
             while (SDL_PollEvent(&e)) {
                 if (e.type == SDL_QUIT) running = false;
             }
         } while (running);
 
-        SDL_GL_DeleteContext(sdl.context);
-        SDL_FreeSurface(sdl.surface);
-        SDL_DestroyWindow(sdl.window);
+        SDL_GL_DeleteContext(sdl_state.context);
+        SDL_FreeSurface(sdl_state.surface);
+        SDL_DestroyWindow(sdl_state.window);
         SDL_Quit();
 
         #else

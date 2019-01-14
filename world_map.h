@@ -9,8 +9,8 @@ const int DEFAULT_SIZE_Y = 40;
 
 class WorldMap {
     private:
-        int _sizeX, _sizeY;
-        std::vector<std::vector<float> > _heightMap;
+        int _width, _height;
+        std::vector<std::vector<float> > _hmap;
         void _initMap(void);
     public:
         WorldMap(void);
