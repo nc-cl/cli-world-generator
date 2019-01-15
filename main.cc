@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Create mesh from map data
-        HeightMapMesh hmap_mesh(const_cast<HeightMap*>(&hmap));
+        HeightMapMesh hmap_mesh(&hmap);
 
         // Shader compilation + linking
         ShaderHandler glsh;
@@ -181,8 +181,8 @@ int main(int argc, char *argv[]) {
         SDL_Event e;
         bool running = true;
 
-        float x_center = ((float)size_x) / 2.0f * -0.2f,
-            y_center = ((float)size_y) / 2.0f * 0.2f;
+        float x_center = static_cast<float>(size_x) / 2.0f * -0.2f,
+            y_center = static_cast<float>(size_y) / 2.0f * 0.2f;
 
         do {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
             view = glm::rotate(view, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
             // Projection matrix
-            projection = glm::perspective(glm::radians(100.0f), (float)(sdl_state.window_x / sdl_state.window_y), 0.01f, 100.0f);
+            projection = glm::perspective(glm::radians(100.0f), static_cast<float>(sdl_state.window_x / sdl_state.window_y), 0.01f, 100.0f);
 
             glUseProgram(shader);
             GLint model_l = glGetUniformLocation(shader, "model"),

@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++17 -Werror -Wpedantic
+CFLAGS = -std=c++17 -Wall -Wextra -Wold-style-cast -Wuseless-cast -Werror -Wpedantic
 GLFLAGS = -lSDL2 -lGLEW -lGL
 
 DEPENDENCIES = main.o height_map.o shader_handler.o height_map_mesh.o

@@ -12,7 +12,7 @@ HeightMapMesh::HeightMapMesh(const HeightMap *hmap) {
     bool at_n_bound, at_e_bound, at_s_bound, at_w_bound;
     int prev_x, next_x, prev_y, next_y;
 
-    for (int i = 0; i < num_vertices; i++) {
+    for (unsigned int i = 0; i < num_vertices; i++) {
         // XY values
         _vertices.push_back((i % v_size_x) *  vertex_step);
         _vertices.push_back((i / v_size_x) * -vertex_step);
