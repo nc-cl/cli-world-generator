@@ -6,7 +6,7 @@
 
 const std::string SHADER_DIR = "shader/";
 
-ShaderHandler::ShaderHandler(void) {}
+ShaderHandler::ShaderHandler() {}
 
 ShaderHandler::~ShaderHandler() {
     glDetachShader(_program, _vertex_sh);

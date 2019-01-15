@@ -3,7 +3,7 @@
 #include <thread>
 #include <chrono>
 #include "height_map.h"
-#include "noise_generator.h"
+#include "noise_util.h"
 
 #if __has_include(<SDL2/SDL.h>) && __has_include(<GL/glew.h>) && __has_include(<glm/glm.hpp>)
 #include <SDL2/SDL.h>
@@ -23,40 +23,40 @@ const unsigned int DEFAULT_WINDOW_SIZE_Y = 800;
 #endif
 
 int main(int argc, char *argv[]) {
-    int width = DEFAULT_SIZE_X;
-    int height = DEFAULT_SIZE_Y;
+    int size_x = DEFAULT_SIZE_X;
+    int size_y = DEFAULT_SIZE_Y;
 
-    int octaves = DEFAULT_OCTAVES;
-    float lacunarity = DEFAULT_LACUNARITY;
-    float persistence = DEFAULT_PERSISTENCE;
+    int octaves = noise_util::DEFAULT_OCTAVES;
+    float lacunarity = noise_util::DEFAULT_LACUNARITY;
+    float persistence = noise_util::DEFAULT_PERSISTENCE;
 
     bool use_colour = true;
     bool use_gui = false;
     bool use_wireframe_mode = false;
 
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--width") == 0 || strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "-x") == 0) {
+        if (strcmp(argv[i], "-x") == 0) {
             if (i + 1 < argc) {
                 try {
-                    width = std::stoi(argv[i+1]);
+                    size_x = std::stoi(argv[i+1]);
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
-        } else if (strcmp(argv[i], "--height") == 0 || strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-y") == 0) {
+        } else if (strcmp(argv[i], "-y") == 0) {
             if (i + 1 < argc) {
                 try {
-                    height = std::stoi(argv[i+1]);
+                    size_y = std::stoi(argv[i+1]);
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
         } else if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
             if (i + 1 < argc) {
                 try {
-                    width = std::stoi(argv[i+1]);
+                    size_x = std::stoi(argv[i+1]);
                     i++;
 
                     if (i + 1 < argc) {
-                        height = std::stoi(argv[i+1]);
+                        size_y = std::stoi(argv[i+1]);
                         i++;
                     }
                 } catch (const std::invalid_argument& e) {}
@@ -99,20 +99,20 @@ int main(int argc, char *argv[]) {
 
     srand(time(NULL));
 
-    HeightMap hmap(width, height);
+    HeightMap hmap(size_x, size_y);
 
-    float** heightNoise = NoiseGenerator::getPerlinNoise(
+    float** heightNoise = noise_util::getPerlinNoise(
         octaves,
         lacunarity,
         persistence,
-        width,
-        height,
-        NoiseGenerator::getWhiteNoise(width, height));
+        size_x,
+        size_y,
+        noise_util::getWhiteNoise(size_x, size_y));
 
-    int max_border_dist = std::max(std::min(width, height) / 5, 1);
+    int max_border_dist = std::max(std::min(size_x, size_y) / 5, 1);
 
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+    for (int x = 0; x < size_x; x++) {
+        for (int y = 0; y < size_y; y++) {
             int distanceFromBorder = hmap.getDistanceFromOutOfBounds(x, y);
 
             if (distanceFromBorder <= max_border_dist) {
@@ -181,8 +181,8 @@ int main(int argc, char *argv[]) {
         SDL_Event e;
         bool running = true;
 
-        float x_center = ((float)width) / 2.0f * -0.2f,
-            y_center = ((float)height) / 2.0f * 0.2f;
+        float x_center = ((float)size_x) / 2.0f * -0.2f,
+            y_center = ((float)size_y) / 2.0f * 0.2f;
 
         do {
             glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
