@@ -18,7 +18,6 @@ class HeightMap {
         int getSizeY(void) const;
         int getDistanceFromOutOfBounds(int, int);
         void setHeights(float**);
-        void printMap(bool);
         float operator()(int, int) const;
 };
 

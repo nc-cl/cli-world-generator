@@ -35,8 +35,8 @@ void ShaderHandler::compileShader(GLenum sh_type, std::string fpath) {
         glGetShaderInfoLog(shader, 512, NULL, info_log);
 
         std::stringstream ss;
-        ss << "vertex shader compilation failed\n\nshader src:\n" << src
-            << "\nlog:\n" << info_log << std::endl;
+        ss << "Vertex shader compilation failed.\n\nshader src:\n" << src
+            << "\n\nlog:\n" << info_log << "\n";
         throw ss.str();
     }
 
@@ -62,7 +62,7 @@ void ShaderHandler::linkShaders() {
         glGetShaderInfoLog(_program, 512, NULL, info_log);
 
         std::stringstream ss;
-        ss << "shader linking failed\n\nlog:\n" << info_log << std::endl;
+        ss << "Shader linking failed.\n\nlog:\n" << info_log << "\n";
         throw ss.str();
     }
 }
