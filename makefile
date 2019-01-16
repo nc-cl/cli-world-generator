@@ -11,6 +11,10 @@ EXECUTABLE_NO_GUI  = main_nogui
 .PHONY: all
 all: $(EXECUTABLE)
 
+.PHONY: debug
+debug: CFLAGS += -ggdb3
+debug: $(EXECUTABLE)
+
 $(EXECUTABLE): $(DEPENDENCIES)
 	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(DEPENDENCIES) $(GLFLAGS)
 
