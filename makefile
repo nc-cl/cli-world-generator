@@ -1,8 +1,8 @@
 CC = g++
-CFLAGS = -std=c++17 -Wall -Wextra -Wold-style-cast -Wuseless-cast -Werror -Wpedantic
+CFLAGS = -std=c++17 -Wall -Wextra -Wpedantic -Wold-style-cast -Wuseless-cast -Werror
 GLFLAGS = -lSDL2 -lGLEW -lGL
 
-DEPENDENCIES = main.o height_map.o shader_handler.o height_map_mesh.o
+DEPENDENCIES = main.o height_map.o shader_handler.o height_map_mesh.o height_map_settings_mask.o
 EXECUTABLE = main
 
 DEPENDENCIES_NO_GUI = main.o height_map.o noise_generator.o

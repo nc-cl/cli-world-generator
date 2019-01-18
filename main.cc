@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include "height_map.h"
+#include "height_map_settings_mask.h"
 #include "noise_util.h"
 
 #if __has_include(<SDL2/SDL.h>) && __has_include(<GL/glew.h>) && __has_include(<glm/glm.hpp>)
@@ -102,7 +103,7 @@ int main(int argc, char *argv[]) {
 
     HeightMap hmap(size_x, size_y);
 
-    float** heightNoise = noise_util::getPerlinNoise(
+    float** hnoise = noise_util::getPerlinNoise(
         octaves,
         lacunarity,
         persistence,
@@ -110,21 +111,11 @@ int main(int argc, char *argv[]) {
         size_y,
         noise_util::getWhiteNoise(size_x, size_y));
 
-    int max_border_dist = std::max(std::min(size_x, size_y) / 5, 1);
-
-    for (int x = 0; x < size_x; x++) {
-        for (int y = 0; y < size_y; y++) {
-            int distanceFromBorder = hmap.getDistanceFromOutOfBounds(x, y);
-
-            if (distanceFromBorder <= max_border_dist) {
-                heightNoise[x][y] -= distanceFromBorder == 1 ? 1 : 0.04f * std::abs(distanceFromBorder - (max_border_dist + 1));
-            }
-
-            heightNoise[x][y] = std::max(heightNoise[x][y], 0.0f);
-        }
-    }
-
-    hmap.setHeights(heightNoise);
+    HeightMapSettingsMask hmap_settings(&hmap);
+    hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 5, 1));
+    hmap.setHeights(hnoise, size_x, size_y);
+    std::cout << hmap_settings.getSizeX() << " " << hmap_settings.getSizeY() << "\n";
+    hmap = hmap + &hmap_settings;
 
     if (print_map || print_map_colourless || !HAS_3D_DEPENDENCIES) {
         std::stringstream ss;
