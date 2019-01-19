@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 
     hmap.setHeights(hnoise, size_x, size_y);
 
-    HeightMapSettingsMask hmap_settings(&hmap);
+    HeightMapSettingsMask hmap_settings(size_x, size_y);
 
     if (apply_map_border) {
         hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 4, 1));

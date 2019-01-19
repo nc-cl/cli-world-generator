@@ -19,8 +19,11 @@ HeightMap::HeightMap(int x, int y) {
     for (int i = 0; i < size_x; i++) _heights[i].resize(size_y, 0.0f);
 }
 
-void HeightMap::setHeights(std::vector<std::vector <float> > *heights) {
-    _heights = *heights;
+void HeightMap::setHeights(float height, int x, int y) {
+    _heights.resize(x);
+
+    for (auto i = _heights.begin(); i != _heights.end(); i++)
+        (*i).resize(y, height);
 }
 
 void HeightMap::setHeights(float **heights, int x, int y) {
@@ -30,6 +33,10 @@ void HeightMap::setHeights(float **heights, int x, int y) {
         _heights[i].resize(y);
         for (int j = 0; j < y; j++) _heights[i][j] = heights[i][j];
     }
+}
+
+void HeightMap::setHeights(std::vector<std::vector <float> > *heights) {
+    _heights = *heights;
 }
 
 std::vector<std::vector<float> > HeightMap::getHeights() const {

@@ -2,8 +2,11 @@
 #include "height_map_settings_mask.h"
 
 HeightMapSettingsMask::HeightMapSettingsMask(const HeightMap *hmap) {
-    _heights = hmap->getHeights();
-    this->reset();
+    this->setHeights(0.0f, hmap->getSizeX(), hmap->getSizeY());
+}
+
+HeightMapSettingsMask::HeightMapSettingsMask(int x, int y) {
+    this->setHeights(0.0f, x, y);
 }
 
 void HeightMapSettingsMask::reset() {
@@ -15,7 +18,7 @@ void HeightMapSettingsMask::reset() {
 
 void HeightMapSettingsMask::applyBorder(float border_val, float border_creep, int border_size) {
     border_val = std::clamp(border_val, 0.0f, 1.0f) * 2.0f - 1.0f;
-    border_creep = std::clamp(border_creep, 0.0f, 1.0f);
+    border_creep = std::clamp(border_creep, -1.0f, 1.0f);
 
     int size_x = this->getSizeX(),
         size_y = this->getSizeY(),

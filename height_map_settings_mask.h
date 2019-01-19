@@ -6,6 +6,7 @@
 class HeightMapSettingsMask : public HeightMap {
     public:
         HeightMapSettingsMask(const HeightMap *hmap);
+        HeightMapSettingsMask(int x, int y);
         void reset(void);
         void applyBorder(float border_val, float border_creep, int border_size);
 };

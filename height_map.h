@@ -12,8 +12,9 @@ class HeightMap {
     public:
         HeightMap(void);
         HeightMap(const HeightMap *hmap);
-        HeightMap(int, int);
+        HeightMap(int x, int y);
         std::vector<std::vector<float> > getHeights(void) const;
+        void setHeights(float height, int x, int y);
         void setHeights(float **heights, int x, int y);
         void setHeights(std::vector<std::vector <float> > *heights);
         int getSizeX(void) const;
