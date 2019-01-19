@@ -20,6 +20,7 @@ class HeightMap {
         int getSizeY(void) const;
         float operator()(int x, int y) const;
         HeightMap operator+(HeightMap *other);
+        void operator+=(HeightMap *other);
 };
 
 #endif

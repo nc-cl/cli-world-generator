@@ -114,7 +114,7 @@ int main(int argc, char *argv[]) {
 
     if (apply_map_border) {
         hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 4, 1));
-        hmap = hmap + &hmap_settings;
+        hmap += &hmap_settings;
     }
 
     if (print_map || print_map_colourless || !HAS_3D_DEPENDENCIES) {

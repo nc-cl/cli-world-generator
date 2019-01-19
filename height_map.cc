@@ -64,3 +64,13 @@ HeightMap HeightMap::operator+(HeightMap *other) {
     result.setHeights(&result_h);
     return result;
 }
+
+void HeightMap::operator+=(HeightMap *other) {
+    int other_x = other->getSizeX(),
+        other_y = other->getSizeY();
+
+    for (int i = 0; i < other_x; i++) {
+        for (int j = 0; j < other_y; j++)
+            _heights[i][j] = std::clamp(_heights[i][j] + (*other)(i, j), 0.0f, 1.0f);
+    }
+}
