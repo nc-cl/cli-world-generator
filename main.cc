@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     int octaves = noise_util::DEFAULT_OCTAVES;
     float lacunarity = noise_util::DEFAULT_LACUNARITY;
     float persistence = noise_util::DEFAULT_PERSISTENCE;
+    bool apply_map_border = true;
 
     bool print_map = false;
     bool print_map_colourless = false;
@@ -84,15 +85,11 @@ int main(int argc, char *argv[]) {
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
-        } else if (strcmp(argv[i], "--temperature") == 0 || strcmp(argv[i], "-t") == 0) {
-            try {
-                // temporarily removed
-                //temperature = std::stoi(argv[i+1]);
-                i++;
-            } catch (const std::invalid_argument& e) {}
+        } else if (strcmp(argv[i], "--no-border") == 0) {
+            apply_map_border = false;
         } else if (strcmp(argv[i], "--print") == 0) {
             print_map = true;
-        } else if (strcmp(argv[i], "--print-colourless") == 0) {
+        } else if (strcmp(argv[i], "--print-nocol") == 0) {
             print_map_colourless = true;
         } else if (strcmp(argv[i], "-f") == 0) {
             use_wireframe_mode = true;
@@ -111,11 +108,14 @@ int main(int argc, char *argv[]) {
         size_y,
         noise_util::getWhiteNoise(size_x, size_y));
 
-    HeightMapSettingsMask hmap_settings(&hmap);
-    hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 5, 1));
     hmap.setHeights(hnoise, size_x, size_y);
-    std::cout << hmap_settings.getSizeX() << " " << hmap_settings.getSizeY() << "\n";
-    hmap = hmap + &hmap_settings;
+
+    HeightMapSettingsMask hmap_settings(&hmap);
+
+    if (apply_map_border) {
+        hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 4, 1));
+        hmap = hmap + &hmap_settings;
+    }
 
     if (print_map || print_map_colourless || !HAS_3D_DEPENDENCIES) {
         std::stringstream ss;
