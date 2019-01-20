@@ -19,8 +19,8 @@ void HeightMapSettingsMask::reset() {
 void HeightMapSettingsMask::applyBorder(float border_h, float h_falloff, float h_falloff_limit,
     int border_width) {
 
-    border_h = std::clamp(border_h, 0.0f, 1.0f) * 2.0f - 1.0f;
-    h_falloff = std::clamp(h_falloff, -1.0f, 1.0f);
+    border_h = std::min(std::max(border_h, 0.0f), 1.0f) * 2.0f - 1.0f;
+    h_falloff = std::min(std::max(h_falloff, -1.0f), 1.0f);
 
     int size_x = this->getSizeX(),
         size_y = this->getSizeY(),
@@ -39,7 +39,7 @@ void HeightMapSettingsMask::applyBorder(float border_h, float h_falloff, float h
             border_dist = std::min(x_dist, y_dist);
 
             if (border_dist < border_width) {
-                h = std::clamp(border_h + h_falloff * border_dist, -1.0f, 1.0f);
+                h = std::min(std::max(border_h + h_falloff * border_dist, -1.0f), 1.0f);
                 normal_h = (h + 1.0f) / 2.0f;
 
                 if (h_falloff_is_positive ? normal_h < h_falloff_limit : normal_h > h_falloff_limit)

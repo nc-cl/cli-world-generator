@@ -66,7 +66,7 @@ HeightMap HeightMap::operator+(HeightMap *other) {
     for (int i = 0; i < result_x; i++) {
         result_h[i].resize(result_y);
         for (int j = 0; j < result_y; j++)
-            result_h[i][j] = std::clamp(_heights[i][j] + (*other)(i, j), 0.0f, 1.0f);
+            result_h[i][j] = std::min(std::max(_heights[i][j] + (*other)(i, j), 0.0f), 1.0f);
     }
 
     result.setHeights(&result_h);
@@ -79,6 +79,6 @@ void HeightMap::operator+=(HeightMap *other) {
 
     for (int i = 0; i < other_x; i++) {
         for (int j = 0; j < other_y; j++)
-            _heights[i][j] = std::clamp(_heights[i][j] + (*other)(i, j), 0.0f, 1.0f);
+            _heights[i][j] = std::min(std::max(_heights[i][j] + (*other)(i, j), 0.0f), 1.0f);
     }
 }

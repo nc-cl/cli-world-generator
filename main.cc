@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
-        } else if (strcmp(argv[i], "--size") == 0 || strcmp(argv[i], "-s") == 0) {
+        } else if (strcmp(argv[i], "-xy") == 0) {
             if (i + 1 < argc) {
                 try {
                     size_x = std::stoi(argv[i+1]);
@@ -87,13 +87,20 @@ int main(int argc, char *argv[]) {
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
-        } else if (strcmp(argv[i], "--no-border") == 0) {
+        } else if (strcmp(argv[i], "--sea-level") == 0 || strcmp(argv[i], "-sl") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    sea_level = std::stof(argv[i+1]);
+                    i++;
+                } catch (const std::invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--no-border") == 0 || strcmp(argv[i], "-nb") == 0) {
             apply_map_border = false;
-        } else if (strcmp(argv[i], "--print") == 0) {
+        } else if (strcmp(argv[i], "--print") == 0 || strcmp(argv[i], "-pc") == 0) {
             print_map = true;
-        } else if (strcmp(argv[i], "--print-nocol") == 0) {
+        } else if (strcmp(argv[i], "--print-nocol") == 0 || strcmp(argv[i], "-pn") == 0) {
             print_map_colourless = true;
-        } else if (strcmp(argv[i], "-f") == 0) {
+        } else if (strcmp(argv[i], "--wireframe") == 0 || strcmp(argv[i], "-f") == 0) {
             use_wireframe_mode = true;
         }
     }
@@ -194,6 +201,7 @@ int main(int argc, char *argv[]) {
     float x_center = static_cast<float>(size_x) / 2.0f * -0.2f,
           y_center = static_cast<float>(size_y) / 2.0f * 0.2f;
 
+
     do {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -208,9 +216,17 @@ int main(int argc, char *argv[]) {
         view = glm::rotate(view, glm::radians(-45.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
         // Projection matrix
-        projection = glm::perspective(glm::radians(100.0f), static_cast<float>(sdl_state.window_x / sdl_state.window_y), 0.01f, 100.0f);
+        projection = glm::perspective(
+            glm::radians(100.0f),
+            static_cast<float>(sdl_state.window_x / sdl_state.window_y),
+            0.01f,
+            100.0f);
 
         glUseProgram(shader);
+
+        GLint sea_level_l = glGetUniformLocation(shader, "sea_level");
+        glUniform1f(sea_level_l, sea_level);
+
         GLint model_l = glGetUniformLocation(shader, "model"),
               view_l = glGetUniformLocation(shader, "view"),
               projection_l = glGetUniformLocation(shader, "projection");
