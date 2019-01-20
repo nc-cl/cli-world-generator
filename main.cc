@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
     int octaves = noise_util::DEFAULT_OCTAVES;
     float lacunarity = noise_util::DEFAULT_LACUNARITY;
     float persistence = noise_util::DEFAULT_PERSISTENCE;
+
+    float sea_level = 0.45f;
     bool apply_map_border = true;
 
     bool print_map = false;
@@ -113,7 +115,7 @@ int main(int argc, char *argv[]) {
     HeightMapSettingsMask hmap_settings(size_x, size_y);
 
     if (apply_map_border) {
-        hmap_settings.applyBorder(0.0f, 0.04f, std::max(std::min(size_x, size_y) / 4, 1));
+        hmap_settings.applyBorder(0.0f, 0.04f, sea_level, std::max(std::min(size_x, size_y) / 4, 1));
         hmap += &hmap_settings;
     }
 
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]) {
 
         for (int y = 0; y < size_y; y++) {
             for (int x = 0; x < size_x; x++) {
-                if (hmap(x, y) >= 0.45f) {
+                if (hmap(x, y) >= sea_level) {
                     // bg colour = 233; fg colour = 40
                     ss << (print_map_colourless ? "GG" : "\033[48;5;233m\033[38;5;40mGG\033[0m");
                 } else {

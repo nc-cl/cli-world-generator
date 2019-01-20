@@ -8,7 +8,7 @@ class HeightMapSettingsMask : public HeightMap {
         HeightMapSettingsMask(const HeightMap *hmap);
         HeightMapSettingsMask(int x, int y);
         void reset(void);
-        void applyBorder(float border_val, float border_creep, int border_size);
+        void applyBorder(float border_h, float h_falloff, float h_falloff_limit, int border_width);
 };
 
 #endif

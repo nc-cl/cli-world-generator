@@ -16,6 +16,7 @@ HeightMap::HeightMap(int x, int y) {
     int size_x = std::max(x, 1),
         size_y = std::max(y, 1);
     _heights.resize(size_x);
+
     for (int i = 0; i < size_x; i++) _heights[i].resize(size_y, 0.0f);
 }
 
