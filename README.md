@@ -1,14 +1,14 @@
 ## CLI World Generator
-<img src="https://i.imgur.com/4TUrKIH.jpg" width=400 height=210/><img src="https://i.imgur.com/sDqgUzr.jpg" width=400 height=210/>
+<img src="https://i.imgur.com/4TUrKIH.jpg" width=400 height=210><img src="https://i.imgur.com/sDqgUzr.jpg" width=400 height=210>
 
 A Perlin noise-based height map generator. Originally displaying maps via printing to the command line, the primary function of the program is now to produce a mesh from the generated map data.
 
 
 ### Dependencies
-OpenGL 3.3+ / GLSL 330+
-GlEW (apt: libglew-dev, yum: glew)
-GLM (libglm-dev, glm-devel)
-SDL2 (libsdl2-dev, SDL2-devel)
+OpenGL 3.3+ / GLSL 330+<br>
+GlEW (apt: libglew-dev, yum: glew)<br>
+GLM (libglm-dev, glm-devel)<br>
+SDL2 (libsdl2-dev, SDL2-devel)<br>
 
 
 ### Options
