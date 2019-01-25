@@ -33,6 +33,8 @@ int main(int argc, char *argv[]) {
     float persistence = noise_util::DEFAULT_PERSISTENCE;
 
     float sea_level = 0.45f;
+    float border_val = 0.0f;
+    float border_falloff = 0.04f;
     bool apply_map_border = true;
 
     bool print_map = false;
@@ -90,7 +92,21 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(argv[i], "--sea-level") == 0 || strcmp(argv[i], "-sl") == 0) {
             if (i + 1 < argc) {
                 try {
-                    sea_level = std::stof(argv[i+1]);
+                    sea_level = std::min(std::max(std::stof(argv[i+1]), 0.0f), 1.0f);
+                    i++;
+                } catch (const std::invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--border-value") == 0 || strcmp(argv[i], "-b") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    border_val = std::min(std::max(std::stof(argv[i+1]), 0.0f), 1.0f);
+                    i++;
+                } catch (const std::invalid_argument& e) {}
+            }
+        } else if (strcmp(argv[i], "--border-falloff") == 0 || strcmp(argv[i], "-bf") == 0) {
+            if (i + 1 < argc) {
+                try {
+                    border_falloff = std::min(std::max(std::stof(argv[i+1]), -1.0f), 1.0f);
                     i++;
                 } catch (const std::invalid_argument& e) {}
             }
@@ -122,7 +138,7 @@ int main(int argc, char *argv[]) {
     HeightMapSettingsMask hmap_settings(size_x, size_y);
 
     if (apply_map_border) {
-        hmap_settings.applyBorder(0.0f, 0.04f, sea_level, std::max(std::min(size_x, size_y) / 4, 1));
+        hmap_settings.applyBorder(border_val, border_falloff, sea_level, std::max(std::min(size_x, size_y) / 4, 1));
         hmap += &hmap_settings;
     }
 

@@ -27,6 +27,12 @@ Decreasing results in smooth, unnatural-looking biome boundaries. Increasing has
 <b>--sea-level</b>, <b>-sl</b><br>
 Specifies the sea level. Float; default value is 0.45, valid values are between 0 and 1.
 
+<b>--border-value</b>, <b>-b</b><br>
+Specifies the height value at the map's borders. Float; default value is 0, valid values are between 0 and 1.
+
+<b>--border-falloff</b>, <b>-bf</b><br>
+Specifies the change in height as the distance from the map border increases. Float; default value is 0.04, valid values are between -1 and 1.
+
 <b>--no-border</b>, <b>-nb</b><br>
 Do not apply an ocean border to the map.
 
