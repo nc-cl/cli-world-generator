@@ -3,6 +3,7 @@
 #include <ctime>
 #include <thread>
 #include <chrono>
+#include "boost/program_options.hpp"
 #include "height_map.h"
 #include "height_map_settings_mask.h"
 #include "noise_util.h"
@@ -41,85 +42,54 @@ int main(int argc, char *argv[]) {
     bool print_map_colourless = false;
     bool use_wireframe_mode = false;
 
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-x") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    size_x = std::stoi(argv[i+1]);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "-y") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    size_y = std::stoi(argv[i+1]);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "-xy") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    size_x = std::stoi(argv[i+1]);
-                    i++;
 
-                    if (i + 1 < argc) {
-                        size_y = std::stoi(argv[i+1]);
-                        i++;
-                    }
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--octaves") == 0 || strcmp(argv[i], "-o") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    octaves = std::stoi(argv[i+1]);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--persistence") == 0 || strcmp(argv[i], "-p") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    persistence = std::stof(argv[i+1]);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--lacunarity") == 0 || strcmp(argv[i], "-l") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    lacunarity = std::stof(argv[i+1]);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--sea-level") == 0 || strcmp(argv[i], "-sl") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    sea_level = std::min(std::max(std::stof(argv[i+1]), 0.0f), 1.0f);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--border-value") == 0 || strcmp(argv[i], "-b") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    border_val = std::min(std::max(std::stof(argv[i+1]), 0.0f), 1.0f);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--border-falloff") == 0 || strcmp(argv[i], "-bf") == 0) {
-            if (i + 1 < argc) {
-                try {
-                    border_falloff = std::min(std::max(std::stof(argv[i+1]), -1.0f), 1.0f);
-                    i++;
-                } catch (const std::invalid_argument& e) {}
-            }
-        } else if (strcmp(argv[i], "--no-border") == 0 || strcmp(argv[i], "-nb") == 0) {
-            apply_map_border = false;
-        } else if (strcmp(argv[i], "--print") == 0 || strcmp(argv[i], "-pc") == 0) {
-            print_map = true;
-        } else if (strcmp(argv[i], "--print-nocol") == 0 || strcmp(argv[i], "-pn") == 0) {
-            print_map_colourless = true;
-        } else if (strcmp(argv[i], "--wireframe") == 0 || strcmp(argv[i], "-f") == 0) {
-            use_wireframe_mode = true;
-        }
+    namespace opts = boost::program_options;
+
+    opts::options_description opts_desc("Options");
+
+    opts_desc.add_options()
+        ("x,x", opts::value<int>(), "X dimension")
+        ("y,y", opts::value<int>(), "Y dimension")
+
+        ("octaves,o", opts::value<float>(), "Number of octaves")
+        ("lacunarity,l", opts::value<float>(), "Perlin noise lacunarity")
+        ("persistence,p", opts::value<float>(), "Perlin noise persistence")
+
+        ("sea-level,sl", opts::value<float>(), "Map sea level")
+        ("border-value,b", opts::value<float>(), "Map border height")
+        ("border-falloff,bf", opts::value<float>(), "Map border height falloff")
+        ("no-border,nb", "Do not apply a border")
+
+        ("print,pc", "Print map")
+        ("print-nocol,pn", "Print colourless map")
+        ("wireframe,f", "Use wireframe mode");
+
+    opts::variables_map v;
+
+    try {
+        opts::store(opts::parse_command_line(argc, argv, opts_desc), v);
+        opts::notify(v);
+    } catch (opts::error& e) {
+        std::cerr << e.what() << "\n";
+        return EXIT_FAILURE;
     }
+
+    if (v.count("x")) size_x = v["x"].as<int>();
+    if (v.count("y")) size_y = v["y"].as<int>();
+
+    if (v.count("octaves")) octaves = v["octaves"].as<float>();
+    if (v.count("lacunarity")) lacunarity = v["lacunarity"].as<float>();
+    if (v.count("persistence")) persistence = v["persistence"].as<float>();
+
+    if (v.count("sea-level")) sea_level = v["sea-level"].as<float>();
+    if (v.count("border-value")) border_val = v["border-value"].as<float>();
+    if (v.count("border-falloff")) border_falloff = v["border-falloff"].as<float>();
+    if (v.count("no-border")) apply_map_border = false;
+
+    if (v.count("print")) print_map = true;
+    if (v.count("print-nocol")) print_map_colourless = true;
+    if (v.count("wireframe")) use_wireframe_mode = true;
+
 
     srand(time(NULL));
 

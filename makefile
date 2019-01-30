@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -std=c++14 -Wall -Wextra -Wpedantic -Wold-style-cast -Wuseless-cast -Werror
-GLFLAGS = -lSDL2 -lGLEW -lGL
+LFLAGS = -lboost_program_options -lSDL2 -lGLEW -lGL
 
 DEPENDENCIES = main.o height_map.o shader_handler.o height_map_mesh.o height_map_settings_mask.o
 EXECUTABLE = main
@@ -16,7 +16,7 @@ debug: CFLAGS += -ggdb3
 debug: $(EXECUTABLE)
 
 $(EXECUTABLE): $(DEPENDENCIES)
-	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(DEPENDENCIES) $(GLFLAGS)
+	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(DEPENDENCIES) $(LFLAGS)
 
 .PHONY: no_gui
 no_gui: $(EXECUTABLE_NO_GUI)

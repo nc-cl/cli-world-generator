@@ -12,7 +12,7 @@ SDL2 (libsdl2-dev, SDL2-devel)<br>
 
 
 ### Options
-<b>-x</b>, <b>-y</b>, <b>-xy</b><br>
+<b>-x</b>, <b>-y</b>
 Specifies the dimensions of the map. Integer; default values are 100x100.
 
 <b>--octaves</b>, <b>-o</b><br>
