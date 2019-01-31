@@ -15,10 +15,10 @@ Boost program\_options library\* (libboost-program-options-dev, or libboost-all-
 
 
 ### Options
-<b>--help</b>
+<b>--help</b><br>
 Display these options.
 
-<b>-x</b>, <b>-y</b>
+<b>-x</b>, <b>-y</b><br>
 Specifies the dimensions of the map. Integer; default values are 100x100.
 
 <b>--octaves</b>, <b>-o</b><br>
@@ -39,14 +39,14 @@ Specifies the height value at the map's borders. Float; default value is 0, vali
 <b>--border-falloff</b>, <b>-f</b><br>
 Specifies the change in height as the distance from the map border increases. Float; default value is 0.04, valid values are between -1 and 1.
 
-<b>--no-border</b>
+<b>--no-border</b><br>
 Do not apply an ocean border to the map.
 
 <b>--wireframe</b>, <b>-w</b><br>
 Displays the map mesh as a wireframe.
 
-<b>--print</b>
+<b>--print</b><br>
 Prints the map - the program's previous default behaviour.
 
-<b>--print-nocol</b>
+<b>--print-nocol</b><br>
 Prints the map without colour - useful in the failure of ANSI escape sequences.
