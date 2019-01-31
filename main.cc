@@ -46,49 +46,55 @@ int main(int argc, char *argv[]) {
     namespace opts = boost::program_options;
 
     opts::options_description opts_desc("Options");
-
     opts_desc.add_options()
-        ("x,x", opts::value<int>(), "X dimension")
-        ("y,y", opts::value<int>(), "Y dimension")
+        ("help", "Display all options")
+
+        (",x", opts::value<int>(), "X dimension")
+        (",y", opts::value<int>(), "Y dimension")
 
         ("octaves,o", opts::value<float>(), "Number of octaves")
         ("lacunarity,l", opts::value<float>(), "Perlin noise lacunarity")
         ("persistence,p", opts::value<float>(), "Perlin noise persistence")
 
-        ("sea-level,sl", opts::value<float>(), "Map sea level")
+        ("sea-level,s", opts::value<float>(), "Map sea level")
         ("border-value,b", opts::value<float>(), "Map border height")
-        ("border-falloff,bf", opts::value<float>(), "Map border height falloff")
-        ("no-border,nb", "Do not apply a border")
+        ("border-falloff,f", opts::value<float>(), "Map border height falloff")
+        ("no-border", "Do not apply a border")
 
-        ("print,pc", "Print map")
-        ("print-nocol,pn", "Print colourless map")
-        ("wireframe,f", "Use wireframe mode");
+        ("wireframe,w", "Use wireframe mode")
+        ("print", "Print map")
+        ("print-nocol", "Print colourless map");
 
-    opts::variables_map v;
+    opts::variables_map opts_vm;
 
     try {
-        opts::store(opts::parse_command_line(argc, argv, opts_desc), v);
-        opts::notify(v);
+        opts::store(opts::parse_command_line(argc, argv, opts_desc), opts_vm);
+        opts::notify(opts_vm);
     } catch (opts::error& e) {
         std::cerr << e.what() << "\n";
         return EXIT_FAILURE;
     }
 
-    if (v.count("x")) size_x = v["x"].as<int>();
-    if (v.count("y")) size_y = v["y"].as<int>();
+    if (opts_vm.count("help")) {
+        std::cout << opts_desc << "\n";
+        return EXIT_SUCCESS;
+    }
 
-    if (v.count("octaves")) octaves = v["octaves"].as<float>();
-    if (v.count("lacunarity")) lacunarity = v["lacunarity"].as<float>();
-    if (v.count("persistence")) persistence = v["persistence"].as<float>();
+    if (opts_vm.count("-x")) size_x = opts_vm["-x"].as<int>();
+    if (opts_vm.count("-y")) size_y = opts_vm["-y"].as<int>();
 
-    if (v.count("sea-level")) sea_level = v["sea-level"].as<float>();
-    if (v.count("border-value")) border_val = v["border-value"].as<float>();
-    if (v.count("border-falloff")) border_falloff = v["border-falloff"].as<float>();
-    if (v.count("no-border")) apply_map_border = false;
+    if (opts_vm.count("octaves")) octaves = opts_vm["octaves"].as<float>();
+    if (opts_vm.count("lacunarity")) lacunarity = opts_vm["lacunarity"].as<float>();
+    if (opts_vm.count("persistence")) persistence = opts_vm["persistence"].as<float>();
 
-    if (v.count("print")) print_map = true;
-    if (v.count("print-nocol")) print_map_colourless = true;
-    if (v.count("wireframe")) use_wireframe_mode = true;
+    if (opts_vm.count("sea-level")) sea_level = opts_vm["sea-level"].as<float>();
+    if (opts_vm.count("border-value")) border_val = opts_vm["border-value"].as<float>();
+    if (opts_vm.count("border-falloff")) border_falloff = opts_vm["border-falloff"].as<float>();
+    if (opts_vm.count("no-border")) apply_map_border = false;
+
+    if (opts_vm.count("wireframe")) use_wireframe_mode = true;
+    if (opts_vm.count("print")) print_map = true;
+    if (opts_vm.count("print-nocol")) print_map_colourless = true;
 
 
     srand(time(NULL));
