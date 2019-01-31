@@ -87,9 +87,12 @@ int main(int argc, char *argv[]) {
     if (opts_vm.count("lacunarity")) lacunarity = opts_vm["lacunarity"].as<float>();
     if (opts_vm.count("persistence")) persistence = opts_vm["persistence"].as<float>();
 
-    if (opts_vm.count("sea-level")) sea_level = opts_vm["sea-level"].as<float>();
-    if (opts_vm.count("border-value")) border_val = opts_vm["border-value"].as<float>();
-    if (opts_vm.count("border-falloff")) border_falloff = opts_vm["border-falloff"].as<float>();
+    if (opts_vm.count("sea-level"))
+        sea_level = std::min(std::max(opts_vm["sea-level"].as<float>(), 0.0f), 1.0f);
+    if (opts_vm.count("border-value"))
+        border_val = std::min(std::max(opts_vm["border-value"].as<float>(), 0.0f), 1.0f);
+    if (opts_vm.count("border-falloff"))
+        border_falloff = std::min(std::max(opts_vm["border-falloff"].as<float>(), -1.0f), 1.0f);
     if (opts_vm.count("no-border")) apply_map_border = false;
 
     if (opts_vm.count("wireframe")) use_wireframe_mode = true;
