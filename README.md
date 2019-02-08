@@ -6,7 +6,7 @@ A Perlin noise-based height map generator. Originally displaying maps via printi
 
 ### Dependencies
 OpenGL 3.3+ / GLSL 330+<br>
-GlEW\* (apt: libglew-dev)<br>
+GLEW\* (apt: libglew-dev)<br>
 GLM\* (libglm-dev)<br>
 SDL2\* (libsdl2-dev)<br>
 Boost program\_options library\* (libboost-program-options-dev, or libboost-all-dev)<br>
