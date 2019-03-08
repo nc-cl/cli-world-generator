@@ -1,3 +1,9 @@
+// Height map data class.
+// TODO: 1) Decouple class from program-specific assumptions
+// e.g. the default dimensions of the height map, and the upper
+// and lower bounds on height. 2) Define more matrix-like
+// operations (esp. matrix-scalar operations).
+
 #ifndef WORLD_MAP_H_
 #define WORLD_MAP_H_
 

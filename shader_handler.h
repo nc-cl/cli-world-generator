@@ -1,3 +1,6 @@
+// Shader program handler class.
+// Used to build a shader program and maintain its state.
+
 #ifndef SHADER_HANDLER_H_
 #define SHADER_HANDLER_H_
 

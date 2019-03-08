@@ -26,23 +26,28 @@ const unsigned int DEFAULT_WINDOW_SIZE_Y = 800;
 #endif
 
 int main(int argc, char *argv[]) {
+    // Map size
     int size_x = DEFAULT_SIZE_X;
     int size_y = DEFAULT_SIZE_Y;
 
+    // Noise settings: have an impact on Perlin noise generation
     int octaves = noise_util::DEFAULT_OCTAVES;
     float lacunarity = noise_util::DEFAULT_LACUNARITY;
     float persistence = noise_util::DEFAULT_PERSISTENCE;
 
+    // Map settings
     float sea_level = 0.45f;
     float border_val = 0.0f;
     float border_falloff = 0.04f;
     bool apply_map_border = true;
 
+    // Additional program settings
     bool print_map = false;
     bool print_map_colourless = false;
     bool use_wireframe_mode = false;
 
 
+    // Define command line options
     namespace opts = boost::program_options;
 
     opts::options_description opts_desc("Options");
@@ -80,6 +85,7 @@ int main(int argc, char *argv[]) {
         return EXIT_SUCCESS;
     }
 
+    // Process command line options; modify program variables accordingly
     if (opts_vm.count("-x")) size_x = opts_vm["-x"].as<int>();
     if (opts_vm.count("-y")) size_y = opts_vm["-y"].as<int>();
 
@@ -100,9 +106,8 @@ int main(int argc, char *argv[]) {
     if (opts_vm.count("print-nocol")) print_map_colourless = true;
 
 
+    // Begin generating the heightmap
     srand(time(NULL));
-
-    HeightMap hmap(size_x, size_y);
 
     float** hnoise = noise_util::getPerlinNoise(
         octaves,
@@ -112,8 +117,10 @@ int main(int argc, char *argv[]) {
         size_y,
         noise_util::getWhiteNoise(size_x, size_y));
 
+    HeightMap hmap(size_x, size_y);
     hmap.setHeights(hnoise, size_x, size_y);
 
+    // Apply settings that modify the map
     HeightMapSettingsMask hmap_settings(size_x, size_y);
 
     if (apply_map_border) {
@@ -121,6 +128,7 @@ int main(int argc, char *argv[]) {
         hmap += &hmap_settings;
     }
 
+    // Visualise the map as printed output (old functionality - retired to an option)
     if (print_map || print_map_colourless || !HAS_3D_DEPENDENCIES) {
         std::stringstream ss;
 
@@ -139,7 +147,10 @@ int main(int argc, char *argv[]) {
         std::cout << ss.str();
     }
 
+    // Begin setting up SDL and creating the mesh data
+    // At this point, the program stops running if the necessary dependencies are missing
     #if HAS_3D_DEPENDENCIES
+
     SDL_Init(SDL_INIT_EVERYTHING);
 
     struct {
@@ -190,12 +201,16 @@ int main(int argc, char *argv[]) {
     }
     GLuint shader = glsh.getProgram();
 
+    // Calculate the center coordinates for the mesh - used in translating the mesh to the center
+    // of the screen. TODO: Make the space between vertices (vertex_step) a program option + use
+    // it to initialise the mesh, such that it's not repeated in HeightMapMesh
+    float vertex_step = 0.2f;
+    float x_center = static_cast<float>(size_x) / 2.0f * -vertex_step,
+          y_center = static_cast<float>(size_y) / 2.0f * vertex_step;
+
+    // Enter main loop
     SDL_Event e;
     bool running = true;
-
-    float x_center = static_cast<float>(size_x) / 2.0f * -0.2f,
-          y_center = static_cast<float>(size_y) / 2.0f * 0.2f;
-
 
     do {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -245,7 +260,7 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
 
     #else
-    std::cerr << "\nMissing 3D dependencies.\n";
+    std::cerr << "\nMissing 3D dependencies - see readme\n";
     return EXIT_FAILURE;
     #endif
 
